@@ -1,0 +1,8 @@
+node_modules
+src/db/config.ts
+src/middleware/emailConfig.ts
+.DS_Store
+uploads/audio/*
+uploads/photos/*
+uploads/videos/*
+build
