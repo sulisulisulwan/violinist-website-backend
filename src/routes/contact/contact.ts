@@ -1,8 +1,8 @@
 import * as express from 'express'
 
-import { emailHandler } from '../../middleware/emailHandler'
-import Request from '../../Request'
-import Response from '../../Response'
+import { emailHandler } from '../../middleware/emailHandler.js'
+import Request from '../../Request.js'
+import Response from '../../Response.js'
 
 const Contact = express.Router()
 

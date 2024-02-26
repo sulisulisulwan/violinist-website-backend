@@ -1,7 +1,7 @@
-import MySQL from "../db/db";
-import { prepareStringForMySQL } from "./utils";
-import Request from "../Request";
-import RequestRequired from "../request-required-wrapper/RequestRequired";
+import MySQL from "../db/db.js";
+import { prepareStringForMySQL } from "./utils.js";
+import Request from "../Request.js";
+import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 import { BiographyItemMYSQL } from 'suli-violin-website-types/src'
 
 class BioModel extends RequestRequired{

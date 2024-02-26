@@ -1,7 +1,7 @@
-import MySQL from "../db/db";
-import { prepareStringForMySQL } from "./utils";
-import RequestRequired from "../request-required-wrapper/RequestRequired";
-import Request from "../Request";
+import MySQL from "../db/db.js";
+import { prepareStringForMySQL } from "./utils.js";
+import RequestRequired from "../request-required-wrapper/RequestRequired.js";
+import Request from "../Request.js";
 import { EventGroupAPI } from 'suli-violin-website-types/src'
 
 class CalendarModel extends RequestRequired {

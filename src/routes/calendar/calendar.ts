@@ -1,15 +1,16 @@
 import * as express from 'express'
 
-import CalendarModel from '../../models/calendar'
-import Request from '../../Request'
+import CalendarModel from '../../models/calendar.js'
+import Request from '../../Request.js'
 
-import { getWasYesterdayOrBefore, sortBackwardTime, sortForwardTime } from '../utils'
-import MySQL from '../../db/db'
-import config from '../../db/config'
+import { getWasYesterdayOrBefore, sortBackwardTime, sortForwardTime } from '../utils.js'
+import MySQL from '../../db/db.js'
+import Config from '../../config/Config.js'
 import { CalendarDataAPI, EventGroupAPI, EventGroupMYSQL, EventListingAPI, EventListingMYSQL } from 'suli-violin-website-types/src'
 
+const config = new Config()
 const Calendar = express.Router()
-const calendarModel = new CalendarModel(new MySQL(config))
+const calendarModel = new CalendarModel(new MySQL(config.getField('MYSQL_CONFIG')))
 
 Calendar.get('/', async(req, res) => {
   console.log('[GET] /calendar/')

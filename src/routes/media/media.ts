@@ -1,14 +1,14 @@
 import * as express from 'express'
-import AudioModel from '../../models/audio'
-import VideosModel from '../../models/videos'
-import PhotosModel from '../../models/photos'
+import AudioModel from '../../models/audio.js'
+import VideosModel from '../../models/videos.js'
+import PhotosModel from '../../models/photos.js'
 
-import Request from '../../Request'
-import Audio from './subroutes/audio'
-import Photos from './subroutes/photos'
-import Videos from './subroutes/videos'
-import MySQL from '../../db/db'
-import config from '../../db/config'
+import Request from '../../Request.js'
+import Audio from './subroutes/audio.js'
+import Photos from './subroutes/photos.js'
+import Videos from './subroutes/videos.js'
+import MySQL from '../../db/db.js'
+import Config from '../../config/Config.js'
 import { 
   AudioTrackDataAPI, 
   AudioTrackDataMYSQL, 
@@ -20,10 +20,10 @@ import {
   VideoDataMYSQL 
 }  from 'suli-violin-website-types/src'
 
-const audioModel = new AudioModel(new MySQL(config))
-const videosModel = new VideosModel(new MySQL(config))
-const photosModel = new PhotosModel(new MySQL(config))
-
+const config = new Config()
+const audioModel = new AudioModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const videosModel = new VideosModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const photosModel = new PhotosModel(new MySQL(config.getField('MYSQL_CONFIG')))
 const Media = express.Router()
 
 Media.use('/audio', Audio)

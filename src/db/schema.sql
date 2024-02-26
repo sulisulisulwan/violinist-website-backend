@@ -53,8 +53,8 @@ CREATE TABLE photos (
   src TEXT,
   croppedSrc TEXT,
   photoCred TEXT,
-  originalFileName TEXT
-  originalCroppedFileName TEXT
+  originalFileName TEXT,
+  originalCroppedFileName TEXT,
   PRIMARY KEY (id)
 );
 
@@ -68,11 +68,11 @@ CREATE TABLE videos (
 
 CREATE TABLE audioTracks (
   id INT AUTO_INCREMENT NOT NULL,
-  originalFileName TEXT
+  originalFileName TEXT,
   src TEXT,
   author VARCHAR(100),
   title VARCHAR(100),
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE blogs (
@@ -103,6 +103,14 @@ CREATE TABLE playlistTracks (
     REFERENCES playlists(id) 
     ON DELETE CASCADE 
 );
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT NOT NULL,
+  username VARCHAR(50),
+  salt VARCHAR(64),
+  passwordHash VARCHAR(64),
+  PRIMARY KEY (id)
+)
 
 INSERT INTO bio (name, components) VALUES (
   'website',

@@ -1,5 +1,5 @@
 node_modules
-src/db/config.ts
+config/config.json
 src/middleware/emailConfig.ts
 .DS_Store
 uploads/audio/*

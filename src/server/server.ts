@@ -1,6 +1,6 @@
-import * as express from 'express'
-import apiRoutes from '../routes/index'
-import * as cors from 'cors'
+import express from 'express'
+import apiRoutes from '../routes/index.js'
+import cors from 'cors'
 
 const app = express();
 

@@ -1,15 +1,15 @@
 import * as express from 'express'
-import Request from '../../../Request'
-import * as path from 'path'
+import Request from '../../../Request.js'
 import * as fs from 'fs/promises'
-import UploadHandler from '../../../middleware/multer'
-import PhotosModel from '../../../models/photos'
-import MySQL from '../../../db/db'
-import config from '../../../db/config'
+import UploadHandler from '../../../middleware/multer.js'
+import PhotosModel from '../../../models/photos.js'
+import MySQL from '../../../db/db.js'
+import Config from '../../../config/Config.js'
 
+const config = new Config()
 const Photos = express.Router()
-const photosModel = new PhotosModel(new MySQL(config))
-const photosUpload = new UploadHandler('photos')
+const photosModel = new PhotosModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const photosUpload = new UploadHandler('photos', config)
 
 Photos.get('/', async (req, res) => {
   console.log('[GET] /media/photos')
@@ -34,8 +34,10 @@ Photos.get('/', async (req, res) => {
       throw request
     }
 
+    
+
     // Check if file path returned from DB exists in file system
-    const dir = await fs.readdir(path.resolve(__dirname, '../uploads/photos'))
+    const dir = await fs.readdir(config.getField('STORAGE_PHOTO_FILES'))
     const targetFileName = results[0][0].src
     const targetCroppedFileName = results[0][0].croppedSrc
 
@@ -49,7 +51,7 @@ Photos.get('/', async (req, res) => {
       throw request
     }
 
-    res.status(200).sendFile(path.resolve(__dirname, '../uploads/photos/' + (isCropped ? targetCroppedFileName : targetFileName)))    
+    res.status(200).sendFile(config.getField('STORAGE_PHOTO_FILES') + (isCropped ? targetCroppedFileName : targetFileName))    
 
   } catch(request) {
     request instanceof Request ? console.error(request.getError()) : console.error(request)
@@ -105,8 +107,8 @@ Photos.delete('/', async(req, res) => {
     const src = photoData[0][0].src
     const croppedSrc = photoData[0][0].croppedSrc
 
-    const filePath = path.resolve(__dirname + '/uploads/photos/', src)
-    // const croppedFilePath = path.resolve(__dirname + '/uploads/photos/', croppedSrc)
+    const filePath = config.getField('STORAGE_PHOTO_FILES') + src
+    // const croppedFilePath = config.STORAGE_PHOTO_FILES + croppedSrc
     await fs.unlink(filePath);
     // await fs.unlink(croppedFilePath);
 

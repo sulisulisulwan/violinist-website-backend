@@ -1,15 +1,17 @@
-import * as multer from 'multer'
-import * as path from 'path'
+import multer from 'multer'
 import * as crypto from 'crypto'
+
 
 class UploadHandler {
 
+  protected config
   protected upload
   protected storage
   protected dest: string
 
-  constructor(directory: string) {
-    this.dest = path.resolve(__dirname, `uploads/${directory}` )
+  constructor(directory: string, config: any) {
+    this.config = config
+    this.dest = this.config.getField('UPLOAD_DIRECTORY') + directory 
     this.storage = multer.diskStorage({
       destination: this.dest,
       filename: function(req, file, cb) {

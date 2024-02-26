@@ -1,15 +1,16 @@
 import * as express from 'express'
 
-import BlogModel from '../../models/blog'
-import Request from '../../Request'
+import BlogModel from '../../models/blog.js'
+import Request from '../../Request.js'
 
-import MySQL from '../../db/db'
-import config from '../../db/config'
+import MySQL from '../../db/db.js'
+import Config from '../../config/Config.js'
 
-import { createMySqlDatetimeOfNow, getDoubleQuotesEscapedString } from '../utils'
+import { createMySqlDatetimeOfNow, getDoubleQuotesEscapedString } from '../utils.js'
 import { BlogItemAPI, BlogItemMYSQL, ParsedHTMLComponent } from 'suli-violin-website-types/src'
 
-const blogModel = new BlogModel(new MySQL(config))
+const config = new Config()
+const blogModel = new BlogModel(new MySQL(config.getField('MYSQL_CONFIG')))
 const BlogRoute = express.Router()
 
 BlogRoute.get('/', async(req, res) => {

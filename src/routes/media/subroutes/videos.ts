@@ -1,15 +1,15 @@
 import * as express from 'express'
-import VideosModel from '../../../models/videos'
-import Request from '../../../Request'
-import * as path from 'path'
+import VideosModel from '../../../models/videos.js'
+import Request from '../../../Request.js'
 import * as fs from 'fs/promises'
-import UploadHandler from '../../../middleware/multer'
-import MySQL from '../../../db/db'
-import config from '../../../db/config'
+import UploadHandler from '../../../middleware/multer.js'
+import MySQL from '../../../db/db.js'
+import Config from '../../../config/Config.js'
 
+const config = new Config()
 const Videos = express.Router()
-const videosModel = new VideosModel(new MySQL(config))
-const videoUpload = new UploadHandler('videos/thumbnails')
+const videosModel = new VideosModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const videoUpload = new UploadHandler('videos/thumbnails', config)
 
 Videos.get('/thumbnail', async(req, res) => {
 
@@ -21,7 +21,7 @@ Videos.get('/thumbnail', async(req, res) => {
     const result = (await videosModel.getVideoThumbnailById(request)).getData()
     if (result[0].length) {
       const fileName = result[0][0].thumbnail
-      const filePath = path.resolve(__dirname + '../uploads/videos/thumbnails', fileName)
+      const filePath = config.getField('STORAGE_VIDEO_THUMBNAIL_FILES') + fileName
   
       res.status(200).sendFile(filePath)
       return
@@ -52,7 +52,7 @@ Videos.post('/', videoUpload.single('video-thumbnail'), async(req, res) => {
       const arrayBuffer = await result.arrayBuffer()
       const buffer = Buffer.from(arrayBuffer)
       filename = videoUpload.createFileName(caption, 'jpeg')
-      await fs.writeFile(path.resolve(__dirname + '/uploads/videos/thumbnails', filename), buffer)
+      await fs.writeFile(config.getField('STORAGE_VIDEO_THUMBNAIL_FILES') + filename, buffer)
     } else {
       filename = req.file.filename
     }
@@ -112,7 +112,7 @@ Videos.delete('/', async (req, res) => {
     const videoData = (await videosModel.getVideoThumbnailById(request)).getData()
     const thumbnail = videoData[0][0].thumbnail
 
-    const filePath = path.resolve(__dirname + '/uploads/videos/thumbnails/', thumbnail)
+    const filePath = config.getField('STORAGE_PHOTO_FILES') + thumbnail
     await fs.unlink(filePath);
     request.setData({ id });
     (await videosModel.deleteVideoById(request)).getData()

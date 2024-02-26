@@ -1,18 +1,21 @@
 import * as express from 'express'
-import BioModel from '../../models/bio'
-import Request from '../../Request'
-import { getDoubleQuotesEscapedString } from '../utils'
-import MySQL from '../../db/db'
-import config from '../../db/config'
-import LongFormBio from './subroutes/longForm'
-import ShortFormBio from './subroutes/shortForm'
+import Config from '../../config/Config.js'
+import BioModel from '../../models/bio.js'
+import Request from '../../Request.js'
+import { getDoubleQuotesEscapedString } from '../utils.js'
+import MySQL from '../../db/db.js'
+import LongFormBio from './subroutes/longForm.js'
+import ShortFormBio from './subroutes/shortForm.js'
 import { BiographyAPIData, BiographyItemAPI, BiographyItemMYSQL, ParsedHTMLComponent } from 'suli-violin-website-types/src'
+
+
+const config = new Config()
 
 const Bio = express.Router()
 Bio.use('/longForm', LongFormBio)
 Bio.use('/shortForm', ShortFormBio)
 
-const bioModel = new BioModel(new MySQL(config))
+const bioModel = new BioModel(new MySQL(config.getField('MYSQL_CONFIG')))
 
 Bio.get('/', async (req, res) => {
   console.log('[GET] /bio/')

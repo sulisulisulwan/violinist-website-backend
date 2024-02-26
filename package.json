@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon build/main.cjs; ",
+    "start": "nodemon build/index.js; ",
     "build": "webpack -w",
     "test": "jest"
   },

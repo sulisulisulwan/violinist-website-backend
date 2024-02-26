@@ -1,6 +1,6 @@
-import MySQL from "../db/db";
-import Request from "../Request";
-import RequestRequired from "../request-required-wrapper/RequestRequired";
+import MySQL from "../db/db.js";
+import Request from "../Request.js";
+import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 
 class PhotosModel extends RequestRequired {
 

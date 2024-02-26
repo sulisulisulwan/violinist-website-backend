@@ -1,11 +1,12 @@
 import * as express from 'express'
-import BioModel from '../../../models/bio'
-import Request from '../../../Request'
-import MySQL from '../../../db/db'
-import config from '../../../db/config'
-import { BiographyItemAPI, BiographyItemMYSQL, LongShortFormBioMYSQL } from '../../../../../types/src'
+import BioModel from '../../../models/bio.js'
+import Request from '../../../Request.js'
+import MySQL from '../../../db/db.js'
+import Config from '../../../config/Config.js'
+import { BiographyItemAPI, BiographyItemMYSQL, LongShortFormBioMYSQL } from 'suli-violin-website-types/src'
 
-const bioModel = new BioModel(new MySQL(config))
+const config = new Config()
+const bioModel = new BioModel(new MySQL(config.getField('MYSQL_CONFIG')))
 
 const ShortFormBio = express.Router()
 

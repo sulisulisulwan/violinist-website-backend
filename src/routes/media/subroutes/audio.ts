@@ -1,16 +1,18 @@
 import * as express from 'express'
-import AudioModel from '../../../models/audio'
-import Request from '../../../Request'
-import * as path from 'path'
+import AudioModel from '../../../models/audio.js'
+import Request from '../../../Request.js'
 import * as fs from 'fs/promises'
-import UploadHandler from '../../../middleware/multer'
-import MySQL from '../../../db/db'
-import config from '../../../db/config'
+
+import UploadHandler from '../../../middleware/multer.js'
+import MySQL from '../../../db/db.js'
+import Config from '../../../config/Config.js'
 import { PlaylistItemAPI, PlaylistItemMYSQL, PlaylistTrackAPI, PlaylistTrackMYSQL } from 'suli-violin-website-types/src'
 
+const config = new Config()
+
 const Audio = express.Router()
-const audioModel = new AudioModel(new MySQL(config))
-const audioUpload = new UploadHandler('audio')
+const audioModel = new AudioModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const audioUpload = new UploadHandler('audio', config)
 
 Audio.get('/', async(req, res) => {
   let request = new Request()
@@ -36,7 +38,7 @@ Audio.get('/', async(req, res) => {
     }
 
     // Check if file path returned from DB exists in file system
-    const dir = await fs.readdir(path.resolve(__dirname, '../uploads/audio'))
+    const dir = await fs.readdir(config.getField('STORAGE_AUDIO_FILES'))
     const targetFileName = results[0][0].src
     const fileExists = dir.includes(targetFileName)
 
@@ -48,7 +50,8 @@ Audio.get('/', async(req, res) => {
     }
 
     
-    res.status(200).sendFile(path.resolve(__dirname, '../uploads/audio/' + targetFileName))
+    
+    res.status(200).sendFile(config.getField('STORAGE_AUDIO_FILES') + targetFileName)
     
   } catch(request) {
     request instanceof Request ? console.error(request.getError()) : console.error(request)
@@ -106,7 +109,8 @@ Audio.delete('/', async(req, res) => {
   try {
     const audioTrackData = (await audioModel.getAudioTrackRecordById(request)).getData()
     const src = audioTrackData[0][0].src
-    const filePath = path.resolve(__dirname + '/uploads/audio/', src)
+    
+    const filePath = config.getField('STORAGE_AUDIO_FILES') + src
     await fs.unlink(filePath);
     request.setData({ id });
     (await audioModel.deleteAudioTrackRecordById(request)).getData()

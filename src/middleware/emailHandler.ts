@@ -1,8 +1,8 @@
 
 import * as nodeMailer from 'nodemailer'
-import generateReceiptMessage from './generateReceiptMessage'
-import generateEmailToSuli from './generateEmailToSuli'
-import config from './emailConfig'
+import generateReceiptMessage from './generateReceiptMessage.js'
+import generateEmailToSuli from './generateEmailToSuli.js'
+import config from './emailConfig.js'
 
 type errors = {
   "-3008": "Address not found"

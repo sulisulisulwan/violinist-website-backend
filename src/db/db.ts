@@ -1,11 +1,20 @@
 import * as mysql from 'mysql2/promise'
-import { mySqlConfigIF } from './config'
+
+export interface mySqlConfigIF {
+  user: string
+  password: string
+  database: string
+  timezone: string
+  multipleStatements: boolean
+}
+
 
 class MySQL {
 
   protected connection: Promise<mysql.Connection>
 
   constructor(config: mySqlConfigIF) {
+    // console.log(config)
     this.connection = this.initConnection(config)
   }
 

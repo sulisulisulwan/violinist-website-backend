@@ -1,6 +1,7 @@
-
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "src",
     "outDir": "build",
     "noImplicitAny": true,
     "module": "es2020",
@@ -9,7 +10,10 @@
     "allowJs": true,
     "moduleResolution": "node",
   },
-  "rootDir": "",
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "**/node_modules/**",
+    "node_modules",
+  ]
 }
 

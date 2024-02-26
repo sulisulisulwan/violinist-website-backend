@@ -1,6 +1,6 @@
-import MySQL from "../db/db";
-import Request from "../Request";
-import RequestRequired from "../request-required-wrapper/RequestRequired";
+import MySQL from "../db/db.js";
+import Request from "../Request.js";
+import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 
 class VideosModel extends RequestRequired {
 
@@ -67,7 +67,6 @@ class VideosModel extends RequestRequired {
   
   async deleteVideoById(request: Request): Promise<Request> {
     const data = request.getData()
-    console.log(data)
     const q = `DELETE FROM videos WHERE id = ${data.id}`
     const result = await this.db.query(q)
     request.setData(result)
