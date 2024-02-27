@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
+import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
+
+dotenv.config({ path: '../../.env' })
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -47,6 +50,8 @@ class Config {
       STORAGE_PHOTO_FILES: process.env.BACKEND_STORAGE_PHOTO_FILES,
       STORAGE_VIDEO_THUMBNAIL_FILES: process.env.BACKEND_STORAGE_VIDEO_FILES
     }
+
+    console.log(config)
 
     return config
     

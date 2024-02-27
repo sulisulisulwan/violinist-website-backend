@@ -6,3 +6,4 @@ uploads/audio/*
 uploads/photos/*
 uploads/videos/*
 build
+.env
