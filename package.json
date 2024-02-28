@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon build/index.js; ",
     "start-forever": "forever start build/index.js",
-    "build": "tsc -watch",
+    "build": "tsc -watch"
   },
   "author": "",
   "license": "ISC",
