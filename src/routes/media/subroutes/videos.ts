@@ -124,4 +124,29 @@ Videos.delete('/', async (req, res) => {
 
 })
 
+Videos.get('/validateYoutubeCode', async(req, res) => {
+  console.log('[GET] /media/videos/validateYoutubeCode')
+  const { youtubeCode } = req.query
+  let isValid = true
+
+  try {
+
+    try {
+      const result = await fetch(`https://img.youtube.com/vi/${youtubeCode}/0.jpg`)
+      if (result.status !== 200) {
+        isValid = false
+      }
+    } catch(e) {
+      isValid = false
+    }
+
+    res.status(200).json({ isValid })
+  } catch(e) {
+    console.log(e)
+    res.sendStatus(400)
+  }
+
+
+})
+
 export default Videos
