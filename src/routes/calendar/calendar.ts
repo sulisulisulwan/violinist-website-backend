@@ -130,7 +130,7 @@ Calendar.patch('/', async(req, res) => {
       const eventDate = req.body.eventDates[i]
       request.setData(eventDate)
 
-      if (!eventDate.id === null) {
+      if (eventDate.id === null) {
         eventDate.eventGroupingId = req.body.id
       }
 
