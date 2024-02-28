@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon build/index.js; ",
+    "start-forever": "forever start build/index.js",
     "build": "tsc -watch",
-    "test": "jest"
   },
   "author": "",
   "license": "ISC",
