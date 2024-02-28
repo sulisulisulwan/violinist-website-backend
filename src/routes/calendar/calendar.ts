@@ -130,11 +130,11 @@ Calendar.patch('/', async(req, res) => {
       const eventDate = req.body.eventDates[i]
       request.setData(eventDate)
 
-      if (!eventDate.hasOwnProperty('id')) {
+      if (!eventDate.id === null) {
         eventDate.eventGroupingId = req.body.id
       }
 
-      eventDate.hasOwnProperty('id') ? (await calendarModel.updateEvent(request)).getData() : (await calendarModel.createEvent(request)).getData()
+      eventDate.id !== null ? (await calendarModel.updateEvent(request)).getData() : (await calendarModel.createEvent(request)).getData()
     }
     
     res.sendStatus(201)
