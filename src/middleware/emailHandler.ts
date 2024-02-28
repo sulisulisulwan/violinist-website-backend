@@ -3,6 +3,7 @@ import * as nodeMailer from 'nodemailer'
 import generateReceiptMessage from './generateReceiptMessage.js'
 import generateEmailToSuli from './generateEmailToSuli.js'
 import config from './emailConfig.js'
+import Request from '../Request.js'
 
 type errors = {
   "-3008": "Address not found"
@@ -21,7 +22,7 @@ class EmailHandler {
     }
   }
 
-  async handleEmail(requestObj: any) {
+  async handleEmail(requestObj: Request) {
 
     const data = requestObj.getData()
   
@@ -52,7 +53,7 @@ class EmailHandler {
   
   }
   
-  handleError(e: any, requestObj: any) {
+  handleError(e: any, requestObj: Request) {
     const errorMessage = this.errors[e.errno.toString() as keyof errors] || e.sendMessage
     requestObj.setError(errorMessage)
     return requestObj
