@@ -1,5 +1,4 @@
 node_modules
-config/config.json
 src/middleware/emailConfig.ts
 .DS_Store
 uploads/audio/*
@@ -7,3 +6,7 @@ uploads/photos/*
 uploads/videos/*
 build
 .env
+config/config.json
+!config/.gitkeep
+logs/*
+!logs/.gitkeep
