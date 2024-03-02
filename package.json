@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon build/index.js; ",
+    "stop": "forever stopall",
     "start-forever": "forever start build/index.js",
     "build": "tsc -watch"
   },
