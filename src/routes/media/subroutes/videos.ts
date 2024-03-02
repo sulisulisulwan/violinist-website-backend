@@ -14,6 +14,7 @@ const videoUpload = new UploadHandler('videos/thumbnails', config)
 
 Videos.get(
   '/thumbnail', 
+  generateRequest,
   async(req, res) => {
     const { id } = req.query
     const request = (req as any).requestObj
