@@ -14,7 +14,7 @@ class Logger {
     const dirExists = await this.logDateDirExists(date)
     const logDir = this.config.getField('LOGGER_FILE_PATH') + date + '/';
     if (!dirExists) {
-      fs.mkdir(logDir)
+      await fs.mkdir(logDir)
     }
 
     if (!(await this.logFileExists(logDir))) await this.initLogFile(logDir)
@@ -24,7 +24,8 @@ class Logger {
 
   protected async logDateDirExists(dir: string) {
     try {
-      await fs.open(this.config.getField('LOGGER_FILE_PATH') + dir)
+      const fileHandle = await fs.open(this.config.getField('LOGGER_FILE_PATH') + dir)
+      fileHandle.close()
       return true
     } catch(e) {
       return false

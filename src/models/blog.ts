@@ -1,6 +1,7 @@
 import MySQL from "../db/db.js";
 import Request from "../Request.js";
 import RequestRequired from "../request-required-wrapper/RequestRequired.js";
+import { ResultSetHeader } from "mysql2";
 
 class BlogModel extends RequestRequired {
 
@@ -14,7 +15,7 @@ class BlogModel extends RequestRequired {
   async getAllBlogEntries(request: Request): Promise<Request> {
     const q = `SELECT * FROM blogs`
     const result = await this.db.query(q)
-    request.setData(result)
+    request.setData(result[0])
     return request
   }
 
@@ -29,8 +30,8 @@ class BlogModel extends RequestRequired {
   async createBlogEntry(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `INSERT INTO blogs (title, components, dateCreated, dateLastModified) VALUES ('${data.title}', '${data.components}', '${data.dateCreated}', '${data.dateLastModified}')`
-    const result = await this.db.query(q)
-    request.setData(result)
+    const result = await this.db.query(q) as ResultSetHeader[]
+    request.setData(result[0].insertId)
     return request
   }
 

@@ -7,6 +7,7 @@ import MySQL from '../../db/db.js'
 import LongFormBio from './subroutes/longForm.js'
 import ShortFormBio from './subroutes/shortForm.js'
 import { BiographyAPIData, BiographyItemAPI, BiographyItemMYSQL, ParsedHTMLComponent } from 'suli-violin-website-types/src'
+import generateRequest from '../generateRequest.js'
 
 
 const config = new Config()
@@ -17,9 +18,47 @@ Bio.use('/shortForm', ShortFormBio)
 
 const bioModel = new BioModel(new MySQL(config.getField('MYSQL_CONFIG')))
 
-Bio.get('/', async (req, res) => {
-  console.log('[GET] /bio/')
-  let request = new Request()
+const transformGetWithoutId = (allBioData: any): BiographyAPIData => {
+
+  const {
+    longFormBioResults,
+    shortFormBioResults,
+    bioResults
+  } = allBioData
+
+  return {
+    longFormId: longFormBioResults[0]?.id || null,
+    shortFormId: shortFormBioResults[0]?.id || null,
+    results: bioResults.map((bioItem: BiographyItemMYSQL) => {
+      const parsed = JSON.parse(bioItem.components)
+      return {
+        id: bioItem.id,
+        name: bioItem.name,
+        components: parsed
+      }
+    })
+  }
+}
+
+const transformGetWithId = (dbData: any) => {
+
+  const bioData: BiographyItemAPI = {
+    id: null,
+    name: null,
+    components: []
+  }
+
+  if (dbData[0]) {
+    bioData.id = dbData[0].id
+    bioData.name = dbData[0].name
+    bioData.components = JSON.parse(dbData[0].components)
+  }
+
+  return bioData
+}
+
+Bio.get('/', generateRequest, async (req, res) => {
+  let request = (req as any).requestObj
   
   const { id } = req.query
   
@@ -30,20 +69,9 @@ Bio.get('/', async (req, res) => {
       const longFormBioResults  = (await bioModel.getLongForm(request)).getData()
       const shortFormBioResults  = (await bioModel.getShortForm(request)).getData()
 
-      const resData: BiographyAPIData = {
-        longFormId: longFormBioResults[0]?.id || null,
-        shortFormId: shortFormBioResults[0]?.id || null,
-        results: bioResults.map((bioItem: BiographyItemMYSQL) => {
-          const parsed = JSON.parse(bioItem.components)
-          return {
-            id: bioItem.id,
-            name: bioItem.name,
-            components: parsed
-          }
-        })
-      }
+      const transformed = transformGetWithoutId({ bioResults, longFormBioResults, shortFormBioResults})
 
-      res.status(200).json(resData)
+      res.status(200).json(transformed)
 
     } catch(e) {
       console.log(e)
@@ -55,22 +83,10 @@ Bio.get('/', async (req, res) => {
 
   try {
     request.setData(req.query)
-    
     const dbResult = (await bioModel.getById(request)).getData()
-
-    const bioData: BiographyItemAPI = {
-      id: null,
-      name: null,
-      components: []
-    }
-
-    if (dbResult[0]) {
-      bioData.id = dbResult[0].id
-      bioData.name = dbResult[0].name
-      bioData.components = JSON.parse(dbResult[0].components)
-    }
-  
-    res.status(200).json(bioData)
+    console.log(dbResult)
+    const transformed = transformGetWithId(dbResult)
+    res.status(200).json(transformed)
   } catch(e) {
     res.sendStatus(400)
   }

@@ -1,122 +1,65 @@
 import * as express from 'express'
 
 import BlogModel from '../../models/blog.js'
-import Request from '../../Request.js'
 
 import MySQL from '../../db/db.js'
 import Config from '../../config/Config.js'
 
-import { createMySqlDatetimeOfNow, getDoubleQuotesEscapedString } from '../utils.js'
-import { BlogItemAPI, BlogItemMYSQL, ParsedHTMLComponent } from 'suli-violin-website-types/src'
+import { BlogItemAPI, BlogItemMYSQL } from 'suli-violin-website-types/src'
+import generateRequest from '../generateRequest.js'
+import TransformBlog from '../../transformers/TransformBlog.js'
+
 
 const config = new Config()
 const blogModel = new BlogModel(new MySQL(config.getField('MYSQL_CONFIG')))
-const BlogRoute = express.Router()
+const blogRoute = express.Router()
+const blogTransformer = new TransformBlog()
 
-BlogRoute.get('/', async(req, res) => {
-  console.log('[GET]/blog/')
-  let request = new Request()
-
+blogRoute.get('/', generateRequest, async(req, res) => {
   try {
-    const result = (await blogModel.getAllBlogEntries(request)).getData()
-
-    const parsedResults: BlogItemAPI = result[0].map((blog: BlogItemMYSQL) => {
-      return {
-        title: blog.title,
-        components: JSON.parse(blog.components).map(((component: ParsedHTMLComponent) => {
-          return {
-            type: component.type,
-            content: component.content
-          }
-        })),
-        dateCreated: blog.dateCreated,
-        dateLastModified: blog.dateLastModified,
-      }
-    })
-
-
-    const resData = {
-      results: parsedResults
-    }
-
-    res.status(200).json(resData)
-  } catch(request) {
-    console.error(request)
-  }
-})
-
-BlogRoute.post('/', async(req, res) => {
-  console.log('[POST]/blog/')
-  let request = new Request()
-
-  const { title, components } = req.body 
-
-  const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-    component.content = getDoubleQuotesEscapedString(component.content)
-    return component
-  })
-
-  const dateCreated = createMySqlDatetimeOfNow()
-
-  const data = {
-    title,
-    components: JSON.stringify(doubleQuotesEscapedComponents),
-    dateCreated,
-    dateLastModified: dateCreated
-  }
-
-  request.setData(data)
-
-  try {
-    const insertId = (await blogModel.createBlogEntry(request)).getData()[0].insertId
-    res.status(201).json({ insertId })
-  } catch(request) {
-    console.log(request)
+    let request = (req as any).requestObj
+    const dbResult: BlogItemMYSQL[] = (await blogModel.getAllBlogEntries(request)).getData()
+    const transformedResults: BlogItemAPI[] = dbResult.map(blogTransformer.transformGet)
+    res.status(200).json({ results: transformedResults })
+  } catch(e) {
+    (req as any).logger.log(e.stack)
     res.sendStatus(400)
   }
 })
 
-BlogRoute.patch('/', async(req, res) => {
-  console.log('[PATCH]/blog/')
-  let request = new Request()
-
-  const { id, title, components } = req.body 
-    
-  const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-    component.content = getDoubleQuotesEscapedString(component.content)
-    return component
-  })
-  
-  const dateModified = createMySqlDatetimeOfNow()
-  const data = {
-    id,
-    title,
-    components: JSON.stringify(doubleQuotesEscapedComponents),
-    dateLastModified: dateModified
-  }
-
-  request.setData(data)
-
+blogRoute.post('/', generateRequest, blogTransformer.transformPost, async(req, res) => {
   try {
-    const result = (await blogModel.updateBlogEntryById(request)).getData()
-    res.status(200).json(result[0])
-  } catch(request) {
-    console.error(request)
+    const request = (req as any).requestObj
+    const insertId = (await blogModel.createBlogEntry(request)).getData()
+    res.status(201).json({ insertId })
+  } catch(e) {
+    (req as any).logger.log(e.stack)
+    res.sendStatus(400)
   }
 })
 
-BlogRoute.delete('/', async(req, res) => {
-  console.log('[DELETE]/blog/')
-  let request = new Request()
-  const { id } = req.query
-  request.setData({ id })
 
+blogRoute.patch('/', generateRequest, blogTransformer.transformPatch, async(req, res) => {
   try {
-    const result = (await blogModel.deleteBlogEntryById(request)).getData()
+    const request = (req as any).requestObj;
+    (await blogModel.updateBlogEntryById(request)).getData()
+    res.sendStatus(200)
+  } catch(e) {
+    (req as any).logger.log(e.stack)
+    res.sendStatus(400)
+  }
+})
+
+blogRoute.delete('/', generateRequest, async(req, res) => {
+  try {
+    const request = (req as any).requestObj
+    request.setData({ id: req.query.id })
+    (await blogModel.deleteBlogEntryById(request)).getData()
     res.sendStatus(204)
-  } catch(request) {
-    console.error(request.getError())
+  } catch(e) {
+    (req as any).logger.log(e)
+    res.sendStatus(400)
   }
 })
 
-export default BlogRoute
+export default blogRoute
