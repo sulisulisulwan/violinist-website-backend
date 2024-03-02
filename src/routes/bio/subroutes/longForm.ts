@@ -4,46 +4,40 @@ import Request from '../../../Request.js'
 import MySQL from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import { BiographyItemAPI, BiographyItemMYSQL, LongShortFormBioMYSQL } from 'suli-violin-website-types/src'
+import generateRequest from '../../generateRequest.js'
+import TransformBio from '../../../transformers/TransformBio.js'
 
 const config = new Config()
 const bioModel = new BioModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const longFormBioRoute = express.Router()
+const transformBio = new TransformBio()
 
-const LongFormBio = express.Router()
-
-LongFormBio.get('/', async(req, res) => {
-  console.log('[GET] /bio/longForm')
-  let request = new Request()
-  try {
-    const dbResult: BiographyItemMYSQL[] = (await bioModel.getLongForm(request)).getData()
-    const bioData: BiographyItemAPI = {
-      id: null,
-      name: null,
-      components: []
+longFormBioRoute.get(
+  '/', 
+  generateRequest, 
+  async(req, res) => {
+    const request = (req as any).requestObj
+    try {
+      const dbResult: BiographyItemMYSQL[] = (await bioModel.getLongForm(request)).getData()
+      const bioData: BiographyItemAPI = transformBio.transformGetWithId(dbResult)
+      res.status(200).json(bioData)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(500)
     }
-
-    if (dbResult.length) {
-      bioData.id = dbResult[0].id
-      bioData.name = dbResult[0].name
-      bioData.components = JSON.parse(dbResult[0].components)
-    }
-
-    res.status(200).json(bioData)
-  } catch(request) {
-    console.error(request)
-    res.sendStatus(500)
   }
-})
+)
 
-LongFormBio.patch('/', async (req, res) => {
-  console.log('[PATCH] /bio/longForm')
-  let request = new Request()
-  
-  const { id } = req.body
+longFormBioRoute.patch(
+  '/', 
+  generateRequest,
+  async (req, res) => {
+    const request = (req as any).requestObj
+    const { id } = req.body
+    try {
+      const result: LongShortFormBioMYSQL[] = (await bioModel.getLongFormId(request)).getData()
+      if (!result.length) throw new Error('longformBio table must have a single row indicating the long form bio ID')
 
-  try {
-    const result: LongShortFormBioMYSQL[] = (await bioModel.getLongFormId(request)).getData()
-
-    if (result.length) {
       if (result[0].bioId === id) {
         res.sendStatus(304)
         return
@@ -51,14 +45,13 @@ LongFormBio.patch('/', async (req, res) => {
       
       request.setData(req.body);
       (await bioModel.updateLongFormById(request)).getData()
-
       res.sendStatus(200)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
     }
-  } catch(e) {
-    console.log(e)
-    res.sendStatus(400)
+
   }
+)
 
-})
-
-export default LongFormBio
+export default longFormBioRoute

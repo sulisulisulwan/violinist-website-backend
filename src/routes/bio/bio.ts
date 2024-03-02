@@ -1,185 +1,112 @@
 import * as express from 'express'
 import Config from '../../config/Config.js'
 import BioModel from '../../models/bio.js'
-import Request from '../../Request.js'
-import { getDoubleQuotesEscapedString } from '../utils.js'
 import MySQL from '../../db/db.js'
 import LongFormBio from './subroutes/longForm.js'
 import ShortFormBio from './subroutes/shortForm.js'
-import { BiographyAPIData, BiographyItemAPI, BiographyItemMYSQL, ParsedHTMLComponent } from 'suli-violin-website-types/src'
 import generateRequest from '../generateRequest.js'
-
+import TransformBio from '../../transformers/TransformBio.js'
 
 const config = new Config()
-
-const Bio = express.Router()
-Bio.use('/longForm', LongFormBio)
-Bio.use('/shortForm', ShortFormBio)
-
 const bioModel = new BioModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const transformBio = new TransformBio()
 
-const transformGetWithoutId = (allBioData: any): BiographyAPIData => {
+const bioRoute = express.Router()
+bioRoute.use('/longForm', LongFormBio)
+bioRoute.use('/shortForm', ShortFormBio)
 
-  const {
-    longFormBioResults,
-    shortFormBioResults,
-    bioResults
-  } = allBioData
 
-  return {
-    longFormId: longFormBioResults[0]?.id || null,
-    shortFormId: shortFormBioResults[0]?.id || null,
-    results: bioResults.map((bioItem: BiographyItemMYSQL) => {
-      const parsed = JSON.parse(bioItem.components)
-      return {
-        id: bioItem.id,
-        name: bioItem.name,
-        components: parsed
-      }
-    })
-  }
-}
-
-const transformGetWithId = (dbData: any) => {
-
-  const bioData: BiographyItemAPI = {
-    id: null,
-    name: null,
-    components: []
-  }
-
-  if (dbData[0]) {
-    bioData.id = dbData[0].id
-    bioData.name = dbData[0].name
-    bioData.components = JSON.parse(dbData[0].components)
-  }
-
-  return bioData
-}
-
-Bio.get('/', generateRequest, async (req, res) => {
-  let request = (req as any).requestObj
-  
-  const { id } = req.query
-  
-  if (id === undefined) {
+bioRoute.get(
+  '/', 
+  generateRequest, 
+  async (req, res) => {
+    const request = (req as any).requestObj
+    const { id } = req.query
     
-    try {
-      const bioResults = (await bioModel.getAll(request)).getData()
-      const longFormBioResults  = (await bioModel.getLongForm(request)).getData()
-      const shortFormBioResults  = (await bioModel.getShortForm(request)).getData()
-
-      const transformed = transformGetWithoutId({ bioResults, longFormBioResults, shortFormBioResults})
-
-      res.status(200).json(transformed)
-
-    } catch(e) {
-      console.log(e)
-      res.sendStatus(500)
+    if (id === undefined) {
+      try {
+        const bioResults = (await bioModel.getAll(request)).getData()
+        const longFormBioResults  = (await bioModel.getLongForm(request)).getData()
+        const shortFormBioResults  = (await bioModel.getShortForm(request)).getData()
+        const transformed = transformBio.transformGetWithoutId({ bioResults, longFormBioResults, shortFormBioResults})
+        res.status(200).json(transformed)
+      } catch(e) {
+        (req as any).logger.log(e.stack)
+        res.sendStatus(500)
+      }
+      return
     }
 
-    return
+    try {
+      request.setData(req.query)
+      const dbResult = (await bioModel.getById(request)).getData()
+      const transformed = transformBio.transformGetWithId(dbResult)
+      res.status(200).json(transformed)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
+    }
+
   }
+)
 
-  try {
-    request.setData(req.query)
-    const dbResult = (await bioModel.getById(request)).getData()
-    console.log(dbResult)
-    const transformed = transformGetWithId(dbResult)
-    res.status(200).json(transformed)
-  } catch(e) {
-    res.sendStatus(400)
+bioRoute.post(
+  '/', 
+  generateRequest, 
+  transformBio.transformPost, 
+  async (req, res) => {
+    const request = (req as any).requestObj
+    try {
+      const { insertId } = (await bioModel.create(request)).getData()
+      res.location(`/bio/${insertId}`)
+      res.status(201).json({ insertId })
+    } catch (e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
+    }
   }
+)
 
-})
-
-Bio.post('/', async (req, res) => {
-  console.log('[POST] /bio/')
-  let request = new Request()
-
-  const { name, components } = req.body
-  
-  const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-    component.content = getDoubleQuotesEscapedString(component.content)
-    return component
-  })
-  
-  const data = {
-    name,
-    components: JSON.stringify(doubleQuotesEscapedComponents)
+bioRoute.patch(
+  '/', 
+  generateRequest, 
+  transformBio.transformPatch, 
+  async (req, res) => {
+    const request = (req as any).requestObj
+    try {
+      (await bioModel.updateById(request)).getData()
+      res.sendStatus(200)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
+    }
   }
+)
 
-  request.setData(data)
-
-  try {
-    const { insertId } = (await bioModel.create(request)).getData()
-
-    res.location(`/bio/${insertId}`)
-    res.status(201).json({ insertId })
-  } catch (e) {
-    console.log(e)
-    res.sendStatus(400)
+bioRoute.delete(
+  '/', 
+  async (req, res) => {
+    const request = (req as any).requestObj
+    const idToDelete = Number(req.query.id)
+    try {
+      const longFormData = (await bioModel.getLongFormId(request)).getData()
+      // Update the longForm bio row to null
+      if (longFormData[0].length) {
+        let longFormBio = longFormData[0][0]
+        if (longFormBio.id === idToDelete) {
+          request.setData({ id: null });
+          (await bioModel.updateLongFormById(request)).getData()
+        }
+      } 
+      request.setData(req.query);
+      (await bioModel.deleteById(request)).getData()
+      res.sendStatus(204)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
+    }
   }
-})
-
-Bio.patch('/', async (req, res) => {
-  console.log('[PATCH] /bio/')
-  let request = new Request()
-  
-  const { id, name, components } = req.body
-  
-  const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-    component.content = getDoubleQuotesEscapedString(component.content)
-    return component
-  })
-  
-  const data: BiographyItemMYSQL = {
-    id,
-    name,
-    components: JSON.stringify(doubleQuotesEscapedComponents)
-  }
-
-  request.setData(data)
-
-  try {
-    (await bioModel.updateById(request)).getData()
-
-    res.sendStatus(200)
-  } catch(e) {
-    console.log(e)
-    res.sendStatus(400)
-  }
-
-})
-
-Bio.delete('/', async (req, res) => {
-  console.log('[DELETE] /bio/')
-  let request = new Request()
-
-  const idToDelete = Number(req.query.id)
-  
-  try {
-
-    const longFormData = (await bioModel.getLongFormId(request)).getData()
-
-    // Update the longForm bio row to null
-    if (longFormData[0].length) {
-      let longFormBio = longFormData[0][0]
-      if (longFormBio.id === idToDelete) {
-        request.setData({ id: null });
-        (await bioModel.updateLongFormById(request)).getData()
-      }
-    } 
-
-    request.setData(req.query);
-    (await bioModel.deleteById(request)).getData()
-
-    res.sendStatus(204)
-  } catch(e) {
-    console.error(e)
-    res.sendStatus(400)
-  }
-})
+)
 
 
-export default Bio
+export default bioRoute

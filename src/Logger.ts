@@ -16,10 +16,12 @@ class Logger {
     if (!dirExists) {
       await fs.mkdir(logDir)
     }
-
     if (!(await this.logFileExists(logDir))) await this.initLogFile(logDir)
     const log = await this.createLogString(message)
     await this.writeLog(log, logDir)
+    if (this.config.getField('LOGGER_LOG_TO_CONSOLE')) {
+      console.log(log)
+    }
   }
 
   protected async logDateDirExists(dir: string) {
