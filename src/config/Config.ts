@@ -51,8 +51,6 @@ class Config {
       STORAGE_VIDEO_THUMBNAIL_FILES: process.env.BACKEND_STORAGE_VIDEO_FILES
     }
 
-    console.log(config)
-
     return config
     
   }

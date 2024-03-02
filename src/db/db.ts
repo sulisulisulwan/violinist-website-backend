@@ -14,7 +14,6 @@ class MySQL {
   protected connection: Promise<mysql.Connection>
 
   constructor(config: mySqlConfigIF) {
-    // console.log(config)
     this.connection = this.initConnection(config)
   }
 

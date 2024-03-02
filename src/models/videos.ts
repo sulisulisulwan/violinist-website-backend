@@ -29,7 +29,6 @@ class VideosModel extends RequestRequired {
 
   async createVideo(request: Request): Promise<Request> {
     const data = request.getData()
-    console.log(data)
     const q = `INSERT INTO videos (youtubeCode, thumbnail, caption) VALUES ('${data.youtubeCode}', '${data.thumbnail}', '${data.caption}');`
     const result = await this.db.query(q)
     request.setData(result)
