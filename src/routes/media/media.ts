@@ -8,16 +8,7 @@ import Photos from './subroutes/photos.js'
 import Videos from './subroutes/videos.js'
 import MySQL from '../../db/db.js'
 import Config from '../../config/Config.js'
-import { 
-  AudioTrackDataAPI, 
-  AudioTrackDataMYSQL, 
-  PhotoDataAPI, 
-  PhotoDataMYSQL, 
-  PlaylistItemAPI, 
-  PlaylistTrackMYSQL, 
-  VideoDataAPI, 
-  VideoDataMYSQL 
-}  from 'suli-violin-website-types/src'
+
 import generateRequest from '../generateRequest.js'
 import TransformMedia from '../../transformers/TransformMedia.js'
 

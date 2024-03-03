@@ -1,16 +1,33 @@
 import * as express from 'express'
 import VideosModel from '../../../models/videos.js'
-import Request from '../../../Request.js'
 import * as fs from 'fs/promises'
 import UploadHandler from '../../../middleware/multer.js'
 import MySQL from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import generateRequest from '../../generateRequest.js'
+import { VideoDataAPI, VideoDataMYSQL } from 'suli-violin-website-types/src/index.js'
 
 const config = new Config()
 const Videos = express.Router()
 const videosModel = new VideosModel(new MySQL(config.getField('MYSQL_CONFIG')))
 const videoUpload = new UploadHandler('videos/thumbnails', config)
+
+Videos.get(
+  '/',
+  generateRequest,
+  async(req, res) => {
+    const request = (req as any).requestObj
+    try {
+      const videoResults = (await videosModel.getAllVideos(request)).getData()
+      const videoUrls: VideoDataAPI[] = videoResults[0].map((videoData: VideoDataMYSQL) => ({ id: videoData.id, youtubeCode: videoData.youtubeCode, caption: videoData.caption }))
+      const resData = { results: videoUrls }
+      res.status(200).json(resData)
+    } catch(e) {
+      (req as any).logger.log(e.stack)
+      res.sendStatus(400)
+    }
+  }
+)
 
 Videos.get(
   '/thumbnail', 
