@@ -19,7 +19,8 @@ Photos.get(
     const { id, isCropped } = req.query
 
     if (id === undefined) {
-      res.sendStatus(400)
+      const photos = (await (photosModel.getAllPhotoIds(request))).getData()
+      res.status(200).json(photos[0])
       return
     }
 
