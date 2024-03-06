@@ -18,7 +18,7 @@ class MySQL {
   }
 
   async initConnection(config: mySqlConfigIF): Promise<mysql.Connection> {
-    return mysql.createConnection(config)
+    return mysql.createPool(config)
   }
 
   async query(q: string, v?: string) {
