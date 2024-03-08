@@ -21,6 +21,7 @@ export const getDoubleQuotesEscapedString = (str: string) => {
 
     if (char === "'") {
       escaped += "\'"
+      continue
     }
     escaped += char
   }

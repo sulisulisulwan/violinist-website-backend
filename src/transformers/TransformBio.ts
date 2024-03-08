@@ -68,6 +68,7 @@ class TransformBio {
       component.content = getDoubleQuotesEscapedString(component.content)
       return component
     })
+
     
     const data: BiographyItemMYSQL = {
       id,
