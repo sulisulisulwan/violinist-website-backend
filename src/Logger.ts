@@ -10,6 +10,16 @@ class Logger {
   }
 
   public async log(message: string) {
+    const log = await this.createLogString(message)
+    if (this.config.getField('LOGGER_LOG_TO_TEXT_FILE')) await this.logToTextFile(log)
+    if (this.config.getField('LOGGER_LOG_TO_CONSOLE')) this.logToConsole(log)
+  }
+
+  public async logToConsole(log: string) {
+    console.log(log)
+  }
+
+  public async logToTextFile(log: string) {
     const date = new Date().toISOString().split('T')[0]
     const dirExists = await this.logDateDirExists(date)
     const logDir = this.config.getField('LOGGER_FILE_PATH') + date + '/';
@@ -17,11 +27,7 @@ class Logger {
       await fs.mkdir(logDir)
     }
     if (!(await this.logFileExists(logDir))) await this.initLogFile(logDir)
-    const log = await this.createLogString(message)
     await this.writeLog(log, logDir)
-    if (this.config.getField('LOGGER_LOG_TO_CONSOLE')) {
-      console.log(log)
-    }
   }
 
   protected async logDateDirExists(dir: string) {
