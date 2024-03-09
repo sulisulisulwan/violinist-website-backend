@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon build/index.js; ",
-    "stop": "forever stopall",
-    "start-forever": "forever start build/index.js",
+    "stop": "pm2 stop all",
+    "start-pm2": "pm2 start build/index.js",
     "build": "tsc --skipLibCheck",
     "build-watch": "tsc --skipLibCheck -w"
   },
