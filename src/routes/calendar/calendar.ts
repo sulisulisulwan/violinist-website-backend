@@ -1,17 +1,15 @@
 import * as express from 'express'
 import CalendarModel from '../../models/calendar.js'
-import MySQL from '../../db/db.js'
-import Config from '../../config/Config.js'
+import db from '../../db/db.js'
 import { EventGroupMYSQL, EventListingMYSQL } from 'suli-violin-website-types/src'
 import generateRequest from '../generateRequest.js'
 import TransformCalendar from '../../transformers/TransformCalendar.js'
 
-const config = new Config()
-const Calendar = express.Router()
-const calendarModel = new CalendarModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const calendarRoute = express.Router()
+const calendarModel = new CalendarModel(db)
 const transformCalendar = new TransformCalendar()
 
-Calendar.get(
+calendarRoute.get(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -30,7 +28,7 @@ Calendar.get(
   }
 )
 
-Calendar.post(
+calendarRoute.post(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -53,7 +51,7 @@ Calendar.post(
   }
 )
 
-Calendar.patch(
+calendarRoute.patch(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -78,7 +76,7 @@ Calendar.patch(
   }
 )
 
-Calendar.delete(
+calendarRoute.delete(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -96,4 +94,4 @@ Calendar.delete(
 )
 
 
-export default Calendar
+export default calendarRoute

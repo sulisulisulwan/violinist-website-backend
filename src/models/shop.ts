@@ -3,7 +3,7 @@ import Request from "../Request.js";
 import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 import { ResultSetHeader } from "mysql2";
 
-class BlogModel extends RequestRequired {
+class ShopModel extends RequestRequired {
 
   protected db: typeof MySQL
 
@@ -12,14 +12,14 @@ class BlogModel extends RequestRequired {
     this.db = dbInstance
   }
 
-  async getAllBlogEntries(request: Request): Promise<Request> {
+  async getAll(request: Request): Promise<Request> {
     const q = `SELECT * FROM blogs`
     const result = await this.db.query(q)
     request.setData(result[0])
     return request
   }
 
-  async getBlogEntryById(request: Request): Promise<Request> {
+  async getById(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `SELECT * FROM blogs WHERE id = ${data.id}`
     const result = await this.db.query(q)
@@ -27,7 +27,7 @@ class BlogModel extends RequestRequired {
     return request
   }
 
-  async createBlogEntry(request: Request): Promise<Request> {
+  async create(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `INSERT INTO blogs (title, components, dateCreated, dateLastModified) VALUES ('${data.title}', '${data.components}', '${data.dateCreated}', '${data.dateLastModified}')`
     const result = await this.db.query(q) as ResultSetHeader[]
@@ -35,7 +35,7 @@ class BlogModel extends RequestRequired {
     return request
   }
 
-  async updateBlogEntryById(request: Request): Promise<Request> {
+  async update(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `UPDATE blogs SET title = '${data.title}', components = '${data.components}', dateLastModified = '${data.dateLastModified}' WHERE id = ${data.id}`
     const result = await this.db.query(q)
@@ -43,7 +43,7 @@ class BlogModel extends RequestRequired {
     return request
   }
 
-  async deleteBlogEntryById(request: Request): Promise<Request> {
+  async delete(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `DELETE FROM blogs WHERE id = ${data.id}`
     const result = await this.db.query(q)
@@ -52,4 +52,4 @@ class BlogModel extends RequestRequired {
   }
 }
 
-export default BlogModel
+export default ShopModel

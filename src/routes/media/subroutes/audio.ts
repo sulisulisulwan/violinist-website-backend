@@ -3,18 +3,18 @@ import AudioModel from '../../../models/audio.js'
 import * as fs from 'fs/promises'
 
 import UploadHandler from '../../../middleware/multer.js'
-import MySQL from '../../../db/db.js'
+import db from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import { PlaylistItemAPI, PlaylistItemMYSQL, PlaylistTrackAPI, PlaylistTrackMYSQL } from 'suli-violin-website-types/src'
 import generateRequest from '../../generateRequest.js'
 
 const config = new Config()
 
-const Audio = express.Router()
-const audioModel = new AudioModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const audioRoute = express.Router()
+const audioModel = new AudioModel(db)
 const audioUpload = new UploadHandler('audio', config)
 
-Audio.get(
+audioRoute.get(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -65,7 +65,7 @@ Audio.get(
   }
 )
 
-Audio.post(
+audioRoute.post(
   '/', 
   generateRequest,
   audioUpload.single('audio-track'), 
@@ -87,7 +87,7 @@ Audio.post(
   }
 )
 
-Audio.patch(
+audioRoute.patch(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -105,7 +105,7 @@ Audio.patch(
   }
 )
 
-Audio.delete(
+audioRoute.delete(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -129,7 +129,7 @@ Audio.delete(
   }
 )
 
-Audio.get(
+audioRoute.get(
   '/playlists', 
   generateRequest,
   async(req, res) => {
@@ -180,7 +180,7 @@ Audio.get(
   }
 )
 
-Audio.post(
+audioRoute.post(
   '/playlists', 
   generateRequest,
   async(req, res) => {
@@ -204,7 +204,7 @@ Audio.post(
   }
 )
 
-Audio.patch(
+audioRoute.patch(
   '/playlists', 
   generateRequest,
   async(req, res) => {
@@ -259,7 +259,7 @@ Audio.patch(
   }
 )
 
-Audio.delete(
+audioRoute.delete(
   '/playlists', 
   generateRequest,
   async(req, res) => {
@@ -275,7 +275,7 @@ Audio.delete(
   }
 )
 
-Audio.get(
+audioRoute.get(
   '/playlists/tracks', 
   generateRequest,
   async(req, res) => {
@@ -297,7 +297,7 @@ Audio.get(
   }
 )
 
-Audio.post(
+audioRoute.post(
   '/playlists/tracks',
   generateRequest, 
   async(req, res) => {
@@ -317,7 +317,7 @@ Audio.post(
   }
 )
 
-Audio.delete(
+audioRoute.delete(
   '/playlists/tracks', 
   generateRequest,
   async(req, res) => {
@@ -334,4 +334,4 @@ Audio.delete(
 )
 
 
-export default Audio
+export default audioRoute

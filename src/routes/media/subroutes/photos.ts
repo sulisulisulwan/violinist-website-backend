@@ -2,16 +2,16 @@ import * as express from 'express'
 import * as fs from 'fs/promises'
 import UploadHandler from '../../../middleware/multer.js'
 import PhotosModel from '../../../models/photos.js'
-import MySQL from '../../../db/db.js'
+import db from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import generateRequest from '../../generateRequest.js'
 
 const config = new Config()
-const Photos = express.Router()
-const photosModel = new PhotosModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const photosRoute = express.Router()
+const photosModel = new PhotosModel(db)
 const photosUpload = new UploadHandler('photos', config)
 
-Photos.get(
+photosRoute.get(
   '/', 
   generateRequest,
   async (req, res) => {
@@ -58,7 +58,7 @@ Photos.get(
   }
 )
 
-Photos.post(
+photosRoute.post(
   '/', 
   generateRequest,
   photosUpload.single('photo'), 
@@ -83,7 +83,7 @@ Photos.post(
   }
 )
 
-Photos.patch(
+photosRoute.patch(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -102,7 +102,7 @@ Photos.patch(
   }
 )
 
-Photos.delete(
+photosRoute.delete(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -130,4 +130,4 @@ Photos.delete(
   }
 )
 
-export default Photos
+export default photosRoute

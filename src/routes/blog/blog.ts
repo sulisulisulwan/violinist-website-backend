@@ -1,13 +1,11 @@
 import * as express from 'express'
 import BlogModel from '../../models/blog.js'
-import MySQL from '../../db/db.js'
-import Config from '../../config/Config.js'
+import db from '../../db/db.js'
 import { BlogItemAPI, BlogItemMYSQL } from 'suli-violin-website-types/src'
 import generateRequest from '../generateRequest.js'
 import TransformBlog from '../../transformers/TransformBlog.js'
 
-const config = new Config()
-const blogModel = new BlogModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const blogModel = new BlogModel(db)
 const blogTransformer = new TransformBlog()
 const blogRoute = express.Router()
 

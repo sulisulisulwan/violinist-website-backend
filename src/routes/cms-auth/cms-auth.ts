@@ -1,16 +1,14 @@
 import express from 'express'
 import CmsAuthModel from '../../models/cms-auth.js'
-import Config from '../../config/Config.js'
-import MySQL from '../../db/db.js'
+import db from '../../db/db.js'
 import crypto from 'crypto'
 import generateRequest from '../generateRequest.js'
 
-const CmsAuth = express.Router()
+const cmsAuthRoute = express.Router()
 
-const config = new Config()
-const cmsAuthModel = new CmsAuthModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const cmsAuthModel = new CmsAuthModel(db)
 
-CmsAuth.post(
+cmsAuthRoute.post(
   '/', 
   generateRequest,
   async(req, res) => {
@@ -45,4 +43,4 @@ CmsAuth.post(
 )
 
 
-export default CmsAuth
+export default cmsAuthRoute

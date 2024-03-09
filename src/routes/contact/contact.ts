@@ -5,9 +5,9 @@ import Request from '../../Request.js'
 import Response from '../../Response.js'
 import generateRequest from '../generateRequest.js'
 
-const Contact = express.Router()
+const contactRoute = express.Router()
 
-Contact.post(
+contactRoute.post(
   '/', 
   generateRequest,
   async (req, res) => {
@@ -48,4 +48,4 @@ Contact.post(
   }
 )
 
-export default Contact
+export default contactRoute

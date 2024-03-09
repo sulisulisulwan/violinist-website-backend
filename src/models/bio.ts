@@ -6,9 +6,9 @@ import { BiographyItemMYSQL } from 'suli-violin-website-types/src'
 
 class BioModel extends RequestRequired{
 
-  protected db: MySQL
+  protected db: typeof MySQL
 
-  constructor(dbInstance: MySQL) {
+  constructor(dbInstance: typeof MySQL) {
     super()
     this.db = dbInstance
   }

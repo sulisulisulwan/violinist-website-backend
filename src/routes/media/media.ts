@@ -6,23 +6,21 @@ import PhotosModel from '../../models/photos.js'
 import Audio from './subroutes/audio.js'
 import Photos from './subroutes/photos.js'
 import Videos from './subroutes/videos.js'
-import MySQL from '../../db/db.js'
-import Config from '../../config/Config.js'
+import db from '../../db/db.js'
 
 import generateRequest from '../generateRequest.js'
 import TransformMedia from '../../transformers/TransformMedia.js'
 
-const config = new Config()
-const audioModel = new AudioModel(new MySQL(config.getField('MYSQL_CONFIG')))
-const videosModel = new VideosModel(new MySQL(config.getField('MYSQL_CONFIG')))
-const photosModel = new PhotosModel(new MySQL(config.getField('MYSQL_CONFIG')))
-const Media = express.Router()
+const audioModel = new AudioModel(db)
+const videosModel = new VideosModel(db)
+const photosModel = new PhotosModel(db)
+const mediaRoute = express.Router()
 const transformMedia = new TransformMedia()
 
-Media.use('/audio', Audio)
-Media.use('/photos', Photos)
-Media.use('/videos', Videos)
-Media.get(
+mediaRoute.use('/audio', Audio)
+mediaRoute.use('/photos', Photos)
+mediaRoute.use('/videos', Videos)
+mediaRoute.get(
   '/', 
   generateRequest,
   async (req, res) => {
@@ -45,4 +43,4 @@ Media.get(
   }
 })
 
-export default Media
+export default mediaRoute

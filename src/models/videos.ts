@@ -4,9 +4,9 @@ import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 
 class VideosModel extends RequestRequired {
 
-  protected db: MySQL
+  protected db: typeof MySQL
 
-  constructor(dbInstance: MySQL) {
+  constructor(dbInstance: typeof MySQL) {
     super()
     this.db = dbInstance
   }

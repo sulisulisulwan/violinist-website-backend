@@ -2,17 +2,17 @@ import * as express from 'express'
 import VideosModel from '../../../models/videos.js'
 import * as fs from 'fs/promises'
 import UploadHandler from '../../../middleware/multer.js'
-import MySQL from '../../../db/db.js'
+import db from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import generateRequest from '../../generateRequest.js'
 import { VideoDataAPI, VideoDataMYSQL } from 'suli-violin-website-types/src/index.js'
 
 const config = new Config()
-const Videos = express.Router()
-const videosModel = new VideosModel(new MySQL(config.getField('MYSQL_CONFIG')))
+const videosRoute = express.Router()
+const videosModel = new VideosModel(db)
 const videoUpload = new UploadHandler('videos/thumbnails', config)
 
-Videos.get(
+videosRoute.get(
   '/',
   generateRequest,
   async(req, res) => {
@@ -29,7 +29,7 @@ Videos.get(
   }
 )
 
-Videos.get(
+videosRoute.get(
   '/thumbnail', 
   generateRequest,
   async(req, res) => {
@@ -57,7 +57,7 @@ Videos.get(
   }
 )
 
-Videos.post(
+videosRoute.post(
   '/', 
   generateRequest,
   videoUpload.single('video-thumbnail'), 
@@ -103,7 +103,7 @@ Videos.post(
   }
 )
 
-Videos.patch(
+videosRoute.patch(
   '/', 
   generateRequest,
   videoUpload.single('video-thumbnail'), 
@@ -128,7 +128,7 @@ Videos.patch(
   }
 )
 
-Videos.delete(
+videosRoute.delete(
   '/', 
   generateRequest,
   async (req, res) => {
@@ -154,7 +154,7 @@ Videos.delete(
   }
 )
 
-Videos.get(
+videosRoute.get(
   '/validateYoutubeCode', 
   generateRequest,
   async(req, res) => {
@@ -182,4 +182,4 @@ Videos.get(
   }
 )
 
-export default Videos
+export default videosRoute
