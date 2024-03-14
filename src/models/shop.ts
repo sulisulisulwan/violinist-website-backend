@@ -13,7 +13,7 @@ class ShopModel extends RequestRequired {
   }
 
   async getAll(request: Request): Promise<Request> {
-    const q = `SELECT * FROM blogs`
+    const q = ``
     const result = await this.db.query(q)
     request.setData(result[0])
     return request
@@ -21,7 +21,7 @@ class ShopModel extends RequestRequired {
 
   async getById(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `SELECT * FROM blogs WHERE id = ${data.id}`
+    const q = ``
     const result = await this.db.query(q)
     request.setData(result)
     return request
@@ -29,7 +29,7 @@ class ShopModel extends RequestRequired {
 
   async create(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `INSERT INTO blogs (title, components, dateCreated, dateLastModified) VALUES ('${data.title}', '${data.components}', '${data.dateCreated}', '${data.dateLastModified}')`
+    const q = ``
     const result = await this.db.query(q) as ResultSetHeader[]
     request.setData(result[0].insertId)
     return request
@@ -37,7 +37,7 @@ class ShopModel extends RequestRequired {
 
   async update(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `UPDATE blogs SET title = '${data.title}', components = '${data.components}', dateLastModified = '${data.dateLastModified}' WHERE id = ${data.id}`
+    const q = ``
     const result = await this.db.query(q)
     request.setData(result)
     return request
@@ -45,7 +45,7 @@ class ShopModel extends RequestRequired {
 
   async delete(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `DELETE FROM blogs WHERE id = ${data.id}`
+    const q = ``
     const result = await this.db.query(q)
     request.setData(result)
     return request
