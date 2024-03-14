@@ -27,6 +27,15 @@ class PhotosModel extends RequestRequired {
     return request
   }
 
+  async getPhotosRecordsByType(request: Request): Promise<Request> {
+    const data = request.getData()
+    const type = data.type
+    const q = `SELECT * FROM photos WHERE type = '${type}';`
+    const results = await this.db.query(q)
+    request.setData(results)
+    return request
+  }
+
   async getPhotoFileNameById(request: Request): Promise<Request> {
     const data = request.getData()
     const id = data.id
@@ -44,14 +53,16 @@ class PhotosModel extends RequestRequired {
         croppedSrc,
         photoCred,
         originalFileName,
-        originalCroppedFileName
+        originalCroppedFileName,
+        type
       ) 
       VALUES (
         '${data.src}',
         '${data.croppedSrc}',
         '${data.photoCred}',
         '${data.originalFileName}',
-        '${data.originalCroppedFileName}'
+        '${data.originalCroppedFileName}',
+        '${data.type}'
       );`
     const result = await this.db.query(q)
     request.setData(result)

@@ -16,16 +16,24 @@ photosRoute.get(
   generateRequest,
   async (req, res) => {
     const request = (req as any).requestObj
-    const { id, isCropped } = req.query
+    const { id, isCropped, type } = req.query
 
-    if (id === undefined) {
-      const photos = (await (photosModel.getAllPhotoIds(request))).getData()
-      res.status(200).json(photos[0])
-      return
-    }
-
-    request.setData({ id, isCropped: !!isCropped })
     try {
+
+      if (id === undefined && type === undefined) {
+        const photos = (await (photosModel.getAllPhotoIds(request))).getData()
+        res.status(200).json(photos[0])
+        return
+      }
+      
+      if (id === undefined && type) {
+        request.setData({ type })
+        const photos = (await (photosModel.getPhotosRecordsByType(request))).getData()
+        res.status(200).json(photos[0])
+        return
+      }
+
+      request.setData({ id, isCropped: !!isCropped })
       const results = (await photosModel.getPhotosRecordById(request)).getData()
 
       // Check if photo record exists in DB
@@ -34,20 +42,9 @@ photosRoute.get(
         throw request
       }
 
-      // Check if file path returned from DB exists in file system
-      // const dir = await fs.readdir(config.getField('STORAGE_PHOTO_FILES'))
       const targetFileName = results[0][0].src
       const targetCroppedFileName = results[0][0].croppedSrc
 
-      // const fileExists = dir.includes(targetFileName)
-      // const croppedFileExists = dir.includes(targetCroppedFileName)
-
-      // if (!fileExists || !croppedFileExists) {
-      //   request.setData({ id });
-      //   (await photosModel.deletePhotosRecordById(request)).getData()
-      //   request.setError('404')
-      //   throw request
-      // }
 
       res.status(200).sendFile(config.getField('STORAGE_PHOTO_FILES') + (isCropped ? targetCroppedFileName : targetFileName))    
 
@@ -71,6 +68,7 @@ photosRoute.post(
       src: req.file.filename,
       croppedSrc: req.file.filename, // TODO: temporary
       originalCroppedFileName: req.file.filename, // TODO: temporary
+      type: req.body.type, 
     })
 
     try {

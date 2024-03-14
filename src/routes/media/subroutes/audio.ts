@@ -21,14 +21,15 @@ audioRoute.get(
     const request = (req as any).requestObj
     const { id } = req.query
 
-    if (id === undefined) {
-      res.sendStatus(400)
-      return
-    }
-    
-    request.setData({ id })
     
     try {
+      if (id === undefined) {
+        const data = (await audioModel.getAllAudioTrackRecords(request)).getData()
+        res.status(200).json(data[0])
+        return
+      }
+      
+      request.setData({ id })
       
       const results = (await audioModel.getAudioTrackRecordById(request)).getData()
       

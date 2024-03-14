@@ -83,6 +83,7 @@ bioRoute.patch(
 
 bioRoute.delete(
   '/', 
+  generateRequest, 
   async (req, res) => {
     const request = (req as any).requestObj
     const idToDelete = Number(req.query.id)
