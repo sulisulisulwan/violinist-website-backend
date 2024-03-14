@@ -35,19 +35,19 @@ photosRoute.get(
       }
 
       // Check if file path returned from DB exists in file system
-      const dir = await fs.readdir(config.getField('STORAGE_PHOTO_FILES'))
+      // const dir = await fs.readdir(config.getField('STORAGE_PHOTO_FILES'))
       const targetFileName = results[0][0].src
       const targetCroppedFileName = results[0][0].croppedSrc
 
-      const fileExists = dir.includes(targetFileName)
-      const croppedFileExists = dir.includes(targetCroppedFileName)
+      // const fileExists = dir.includes(targetFileName)
+      // const croppedFileExists = dir.includes(targetCroppedFileName)
 
-      if (!fileExists || !croppedFileExists) {
-        request.setData({ id });
-        (await photosModel.deletePhotosRecordById(request)).getData()
-        request.setError('404')
-        throw request
-      }
+      // if (!fileExists || !croppedFileExists) {
+      //   request.setData({ id });
+      //   (await photosModel.deletePhotosRecordById(request)).getData()
+      //   request.setError('404')
+      //   throw request
+      // }
 
       res.status(200).sendFile(config.getField('STORAGE_PHOTO_FILES') + (isCropped ? targetCroppedFileName : targetFileName))    
 

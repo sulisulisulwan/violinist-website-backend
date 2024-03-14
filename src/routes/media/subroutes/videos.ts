@@ -36,21 +36,23 @@ videosRoute.get(
   generateRequest,
   async(req, res) => {
     const { id } = req.query
-
+    
     if (id === undefined) {
       res.sendStatus(400)
       return
     }
-
+    
     const request = (req as any).requestObj
     request.setData({ id })
-
+    
     try {
       const result = (await videosModel.getVideoThumbnailById(request)).getData()
+      // const result = (await photosModel.getPhotosRecordById(request)).getData()
+      console.log(id)
       if (result[0].length) {
         const fileName = result[0][0].src
         const filePath = config.getField('STORAGE_PHOTO_FILES') + fileName
-    
+        
         res.status(200).sendFile(filePath)
         return
       } 
@@ -111,7 +113,7 @@ videosRoute.post(
         thumbnail_id: insertId
       })
 
-      (await videosModel.createVideo(request)).getData()
+      await videosModel.createVideo(request)
       res.sendStatus(201)
 
     } catch(e) {
@@ -163,6 +165,8 @@ videosRoute.delete(
       await fs.unlink(filePath);
       request.setData({ id });
       (await videosModel.deleteVideoById(request)).getData()
+      request.setData({ id: videoData.thumbnail_id })
+      (await photosModel.deletePhotosRecordById(request)).getData()
       res.sendStatus(204)
     } catch(e) {
       (req as any).logger.log(e.stack)

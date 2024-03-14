@@ -26,16 +26,15 @@ class VideosModel extends RequestRequired {
     const thumbnailId = results[0][0].thumbnail_id
     const q2 = `SELECT (src) FROM photos WHERE id = ${thumbnailId}`
     const results2: any = await this.db.query(q2)
-
     request.setData(results2)
     return request
   }
 
   async createVideo(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `INSERT INTO videos (youtubeCode, thumbnail, caption) VALUES ('${data.youtubeCode}', '${data.thumbnail}', '${data.caption}');`
+    const q = `INSERT INTO videos (youtubeCode, thumbnail_id, caption) VALUES ('${data.youtubeCode}', '${data.thumbnail_id}', '${data.caption}');`
     const result = await this.db.query(q)
-    request.setData(result)
+    request.setData(result[0])
     return request
   }
 
