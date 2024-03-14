@@ -1,0 +1,5 @@
+-UPDATE schema.sql with alt TEXT and type VARCHAR(20)
+-update all preexisting photos with type as "media-photo"
+-insert into photos all video photo files with (src, alt, type) (src, from caption, 'video-thumbnail')
+-rename thumbnail to thumbnail_id
+-update all thumbnail_ids to corresponding photo id
