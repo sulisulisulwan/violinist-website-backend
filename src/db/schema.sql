@@ -55,6 +55,7 @@ CREATE TABLE photos (
   photoCred TEXT,
   originalFileName TEXT,
   originalCroppedFileName TEXT,
+  type VARCHAR(20),
   PRIMARY KEY (id)
 );
 
