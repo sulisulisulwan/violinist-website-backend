@@ -52,6 +52,7 @@ CREATE TABLE photos (
   id INT AUTO_INCREMENT NOT NULL,
   src TEXT,
   croppedSrc TEXT,
+  alt TEXT,
   photoCred TEXT,
   originalFileName TEXT,
   originalCroppedFileName TEXT,
@@ -62,7 +63,7 @@ CREATE TABLE photos (
 CREATE TABLE videos (
   id INT AUTO_INCREMENT NOT NULL,
   youtubeCode TEXT,
-  thumbnail TEXT,
+  thumbnail_id TEXT,
   caption VARCHAR(100),
   PRIMARY KEY (id)
 );
