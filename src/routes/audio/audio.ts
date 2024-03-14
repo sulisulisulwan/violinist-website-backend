@@ -1,12 +1,12 @@
 import * as express from 'express'
-import AudioModel from '../../../models/audio.js'
+import AudioModel from '../../models/audio.js'
 import * as fs from 'fs/promises'
 
-import UploadHandler from '../../../middleware/multer.js'
-import db from '../../../db/db.js'
-import Config from '../../../config/Config.js'
+import UploadHandler from '../../middleware/multer.js'
+import db from '../../db/db.js'
+import Config from '../../config/Config.js'
 import { PlaylistItemAPI, PlaylistItemMYSQL, PlaylistTrackAPI, PlaylistTrackMYSQL } from 'suli-violin-website-types/src'
-import generateRequest from '../../generateRequest.js'
+import generateRequest from '../generateRequest.js'
 
 const config = new Config()
 

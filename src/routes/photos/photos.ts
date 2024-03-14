@@ -1,10 +1,10 @@
 import * as express from 'express'
 import * as fs from 'fs/promises'
-import UploadHandler from '../../../middleware/multer.js'
-import PhotosModel from '../../../models/photos.js'
-import db from '../../../db/db.js'
-import Config from '../../../config/Config.js'
-import generateRequest from '../../generateRequest.js'
+import UploadHandler from '../../middleware/multer.js'
+import PhotosModel from '../../models/photos.js'
+import db from '../../db/db.js'
+import Config from '../../config/Config.js'
+import generateRequest from '../generateRequest.js'
 
 const config = new Config()
 const photosRoute = express.Router()

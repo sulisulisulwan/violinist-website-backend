@@ -1,12 +1,12 @@
 import * as express from 'express'
-import VideosModel from '../../../models/videos.js'
+import VideosModel from '../../models/videos.js'
 import * as fs from 'fs/promises'
-import UploadHandler from '../../../middleware/multer.js'
-import db from '../../../db/db.js'
-import Config from '../../../config/Config.js'
-import generateRequest from '../../generateRequest.js'
+import UploadHandler from '../../middleware/multer.js'
+import db from '../../db/db.js'
+import Config from '../../config/Config.js'
+import generateRequest from '../generateRequest.js'
 import { VideoDataAPI, VideoDataMYSQL } from 'suli-violin-website-types/src/index.js'
-import PhotosModel from '../../../models/photos.js'
+import PhotosModel from '../../models/photos.js'
 
 const config = new Config()
 const videosRoute = express.Router()

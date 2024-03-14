@@ -3,9 +3,9 @@ import AudioModel from '../../models/audio.js'
 import VideosModel from '../../models/videos.js'
 import PhotosModel from '../../models/photos.js'
 
-import Audio from './subroutes/audio.js'
-import Photos from './subroutes/photos.js'
-import Videos from './subroutes/videos.js'
+import Audio from '../audio/audio.js'
+import Photos from '../photos/photos.js'
+import Videos from '../videos/videos.js'
 import db from '../../db/db.js'
 
 import generateRequest from '../generateRequest.js'
