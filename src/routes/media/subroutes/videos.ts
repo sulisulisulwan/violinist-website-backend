@@ -6,10 +6,12 @@ import db from '../../../db/db.js'
 import Config from '../../../config/Config.js'
 import generateRequest from '../../generateRequest.js'
 import { VideoDataAPI, VideoDataMYSQL } from 'suli-violin-website-types/src/index.js'
+import PhotosModel from '../../../models/photos.js'
 
 const config = new Config()
 const videosRoute = express.Router()
 const videosModel = new VideosModel(db)
+const photosModel = new PhotosModel(db)
 const videoUpload = new UploadHandler('videos/thumbnails', config)
 
 videosRoute.get(
@@ -34,14 +36,20 @@ videosRoute.get(
   generateRequest,
   async(req, res) => {
     const { id } = req.query
+
+    if (id === undefined) {
+      res.sendStatus(400)
+      return
+    }
+
     const request = (req as any).requestObj
     request.setData({ id })
 
     try {
       const result = (await videosModel.getVideoThumbnailById(request)).getData()
       if (result[0].length) {
-        const fileName = result[0][0].thumbnail
-        const filePath = config.getField('STORAGE_VIDEO_THUMBNAIL_FILES') + fileName
+        const fileName = result[0][0].src
+        const filePath = config.getField('STORAGE_PHOTO_FILES') + fileName
     
         res.status(200).sendFile(filePath)
         return
@@ -76,7 +84,7 @@ videosRoute.post(
         const arrayBuffer = await result.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
         filename = videoUpload.createFileName(caption, 'jpeg')
-        await fs.writeFile(config.getField('STORAGE_VIDEO_THUMBNAIL_FILES') + filename, buffer)
+        await fs.writeFile(config.getField('STORAGE_PHOTO_FILES') + filename, buffer)
       } else {
         filename = req.file.filename
       }
@@ -86,13 +94,23 @@ videosRoute.post(
       return
     }
 
-    request.setData({
-      youtubeCode,
-      caption,
-      thumbnail: filename
-    })
-
     try {
+      request.setData({
+        alt: caption,
+        src: filename,
+        type: 'video-thumbnail'
+      })
+    
+      const result = (await photosModel.createPhoto(request)).getData()
+
+      const insertId = result[0].insertId
+  
+      request.setData({
+        youtubeCode,
+        caption,
+        thumbnail_id: insertId
+      })
+
       (await videosModel.createVideo(request)).getData()
       res.sendStatus(201)
 
@@ -139,7 +157,7 @@ videosRoute.delete(
 
     try {
       const videoData = (await videosModel.getVideoThumbnailById(request)).getData()
-      const thumbnail = videoData[0][0].thumbnail
+      const thumbnail = videoData[0][0].src
 
       const filePath = config.getField('STORAGE_PHOTO_FILES') + thumbnail
       await fs.unlink(filePath);
