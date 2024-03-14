@@ -21,9 +21,13 @@ class VideosModel extends RequestRequired {
   
   async getVideoThumbnailById(request: Request): Promise<Request> {
     const data = request.getData()
-    const q = `SELECT thumbnail FROM videos WHERE id = ${data.id}`
-    const results = await this.db.query(q)
-    request.setData(results)
+    const q = `SELECT thumbnail_id FROM videos WHERE id = ${data.id}`
+    const results: any = await this.db.query(q)
+    const thumbnailId = results[0][0].thumbnail_id
+    const q2 = `SELECT (src) FROM photos WHERE id = ${thumbnailId}`
+    const results2: any = await this.db.query(q2)
+
+    request.setData(results2)
     return request
   }
 
