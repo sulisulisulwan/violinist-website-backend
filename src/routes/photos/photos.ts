@@ -15,11 +15,11 @@ photosRoute.get(
   '/', 
   generateRequest,
   async (req, res) => {
+
     const request = (req as any).requestObj
     const { id, isCropped, type } = req.query
 
     try {
-
       if (id === undefined && type === undefined) {
         const photos = (await (photosModel.getAllPhotoIds(request))).getData()
         res.status(200).json(photos[0])
@@ -44,7 +44,6 @@ photosRoute.get(
 
       const targetFileName = results[0][0].src
       const targetCroppedFileName = results[0][0].croppedSrc
-
 
       res.status(200).sendFile(config.getField('STORAGE_PHOTO_FILES') + (isCropped ? targetCroppedFileName : targetFileName))    
 
