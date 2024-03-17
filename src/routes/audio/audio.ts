@@ -6,10 +6,13 @@ import UploadHandler from '../../middleware/multer.js'
 import db from '../../db/db.js'
 import Config from '../../config/Config.js'
 import generateRequest from '../generateRequest.js'
+import playlistsRoute from './playlists.js'
 
 const config = new Config()
 
 const audioRoute = express.Router()
+audioRoute.use(playlistsRoute)
+
 const audioModel = new AudioModel(db)
 const audioUpload = new UploadHandler('audio', config)
 

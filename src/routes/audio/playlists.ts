@@ -176,3 +176,4 @@ playlistsRoute.delete(
   }
 )
 
+export default playlistsRoute
