@@ -12,6 +12,6 @@ app.use(cors())
 *  ROUTES
 ************/
 
-app.use('/v1', apiRoutes)
+app.use('/v2', apiRoutes)
 
 export default app
