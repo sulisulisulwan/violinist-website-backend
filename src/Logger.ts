@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import Config from './config/Config'
+import Config from '@sulimantekalli/configlib'
 
 class Logger {
 

@@ -1,5 +1,6 @@
 import * as mysql from 'mysql2/promise'
-import Config from '../config/Config.js'
+import Config from '@sulimantekalli/configlib'
+import configPaths from '../configPaths.js'
 
 export interface mySqlConfigIF {
   user: string
@@ -14,6 +15,7 @@ class MySQL {
   protected connection: Promise<mysql.Connection>
 
   constructor(config: Config) {
+    console.log(config)
     this.connection = this.initConnection(config.getField('MYSQL_CONFIG'))
   }
 
@@ -28,7 +30,7 @@ class MySQL {
 
 }
 
-const config = new Config()
+const config = new Config(configPaths)
 const db = new MySQL(config)
 
 export default db

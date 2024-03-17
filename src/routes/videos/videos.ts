@@ -3,12 +3,13 @@ import VideosModel from '../../models/videos.js'
 import * as fs from 'fs/promises'
 import UploadHandler from '../../middleware/multer.js'
 import db from '../../db/db.js'
-import Config from '../../config/Config.js'
+import Config from '@sulimantekalli/configlib'
 import generateRequest from '../generateRequest.js'
 import { VideoDataAPI, VideoDataMYSQL } from 'suli-violin-website-types/src/index.js'
 import PhotosModel from '../../models/photos.js'
+import configPaths from '../../configPaths.js'
 
-const config = new Config()
+const config = new Config(configPaths)
 const videosRoute = express.Router()
 const videosModel = new VideosModel(db)
 const photosModel = new PhotosModel(db)
