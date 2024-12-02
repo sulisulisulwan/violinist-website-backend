@@ -3,11 +3,9 @@ import * as fs from 'fs/promises'
 import UploadHandler from '../../middleware/multer.js'
 import PhotosModel from '../../models/photos.js'
 import db from '../../db/db.js'
-import Config from '@sulimantekalli/configlib'
 import generateRequest from '../generateRequest.js'
-import configPaths from '../../configPaths.js'
+import config from '../../configPaths.js'
 
-const config = new Config(configPaths)
 const photosRoute = express.Router()
 const photosModel = new PhotosModel(db)
 const photosUpload = new UploadHandler('photos', config)

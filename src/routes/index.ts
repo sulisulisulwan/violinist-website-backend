@@ -4,6 +4,7 @@ import Bio from './bio/bio.js'
 import Blog from './blog/blog.js'
 import Calendar from './calendar/calendar.js'
 import Contact from './contact/contact.js'
+import CmsAssets from './cms-assets/cms-assets.js'
 import CmsAuth from './cms-auth/cms-auth.js'
 import Media from './media/media.js'
 import Photos from './photos/photos.js'
@@ -18,6 +19,7 @@ router.use('/blog', Blog)
 router.use('/calendar', Calendar)
 router.use('/contact', Contact)
 router.use('/cms-auth', CmsAuth)
+router.use('/cms-assets', CmsAssets)
 router.use('/media', Media)
 router.use('/photos', Photos)
 router.use('/videos', Video)

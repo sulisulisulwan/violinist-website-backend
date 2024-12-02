@@ -4,12 +4,9 @@ import * as fs from 'fs/promises'
 
 import UploadHandler from '../../middleware/multer.js'
 import db from '../../db/db.js'
-import Config from '@sulimantekalli/configlib'
 import generateRequest from '../generateRequest.js'
 import playlistsRoute from './playlists.js'
-import configPaths from '../../configPaths.js'
-
-const config = new Config(configPaths)
+import config from '../../configPaths.js'
 
 const audioRoute = express.Router()
 audioRoute.use(playlistsRoute)

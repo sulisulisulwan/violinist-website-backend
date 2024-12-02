@@ -1,5 +1,5 @@
 import { BiographyAPIData, BiographyItemAPI, BiographyItemMYSQL, ParsedHTMLComponent } from "suli-violin-website-types/src"
-import { getDoubleQuotesEscapedString } from "../routes/utils.js"
+import { getDoubleQuotesEscapedString, traverseToTextComponents } from "../routes/utils.js"
 
 class TransformBio {
 
@@ -45,15 +45,12 @@ class TransformBio {
   public transformPost(req: any, res: any, next: any) {
 
     const { name, components } = req.body
-    
-    const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-      component.content = getDoubleQuotesEscapedString(component.content)
-      return component
-    })
+    const escaped = traverseToTextComponents(components)
+    const asString = JSON.stringify(escaped)
     
     const data = {
       name,
-      components: JSON.stringify(doubleQuotesEscapedComponents)
+      components: asString
     }
 
     req.requestObj.setData(data)
@@ -63,17 +60,13 @@ class TransformBio {
 
   public transformPatch(req: any, res: any, next: any) {
     const { id, name, components } = req.body
-    
-    const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-      component.content = getDoubleQuotesEscapedString(component.content)
-      return component
-    })
 
-    
+    const escaped = traverseToTextComponents(components)
+    const asString = JSON.stringify(escaped)
     const data: BiographyItemMYSQL = {
       id,
       name,
-      components: JSON.stringify(doubleQuotesEscapedComponents)
+      components: asString
     }
 
     req.requestObj.setData(data)
@@ -81,5 +74,7 @@ class TransformBio {
   }
 
 }
+
+
 
 export default TransformBio

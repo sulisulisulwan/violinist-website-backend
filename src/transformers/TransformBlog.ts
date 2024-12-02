@@ -1,5 +1,5 @@
 import { BlogItemAPI, BlogItemMYSQL, ParsedHTMLComponent } from "suli-violin-website-types/src"
-import { createMySqlDatetimeOfNow, getDoubleQuotesEscapedString } from "../routes/utils.js"
+import { createMySqlDatetimeOfNow, getDoubleQuotesEscapedString, traverseToTextComponents } from "../routes/utils.js"
 
 class TransformBlog {
 
@@ -22,16 +22,14 @@ class TransformBlog {
   public transformPost(req: any, res: any, next: any) {
     const { title, components } = req.body 
   
-    const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-      component.content = getDoubleQuotesEscapedString(component.content)
-      return component
-    })
+    const escaped = traverseToTextComponents(components)
+    const asString = JSON.stringify(escaped)
   
     const dateNow = createMySqlDatetimeOfNow()
   
     const data = {
       title,
-      components: JSON.stringify(doubleQuotesEscapedComponents),
+      components: asString,
       dateCreated: dateNow,
       dateLastModified: dateNow
     }
@@ -45,16 +43,14 @@ class TransformBlog {
   
     const { id, title, components } = req.body 
       
-    const doubleQuotesEscapedComponents = components.map((component: ParsedHTMLComponent) => { 
-      component.content = getDoubleQuotesEscapedString(component.content)
-      return component
-    })
     
+    const escaped = traverseToTextComponents(components)
+    const asString = JSON.stringify(escaped)
     const dateModified = createMySqlDatetimeOfNow()
     const data = {
       id,
       title,
-      components: JSON.stringify(doubleQuotesEscapedComponents),
+      components: asString,
       dateLastModified: dateModified
     }
   

@@ -6,6 +6,25 @@ export const createMySqlDatetimeOfNow  = () => {
   const dateTime = date + ' ' + timeTrimmed
   return dateTime
 }
+export const traverseToTextComponents = (components: any[] | any) => {
+
+  if (!Array.isArray(components) && components.type === 'text') {
+    components.content = getDoubleQuotesEscapedString(components.content)
+    return components
+  }
+
+  for (let i = 0; i < components.length; i++) {
+    if (components[i].type === 'text') {
+      components[i].content = getDoubleQuotesEscapedString(components[i].content)
+      continue
+    }
+
+    if (components[i].content) {
+      components[i].content = traverseToTextComponents(components[i].content)
+    }
+  }
+  return components
+}
 
 export const getDoubleQuotesEscapedString = (str: string) => {
 

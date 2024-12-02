@@ -1,6 +1,6 @@
 import * as mysql from 'mysql2/promise'
 import Config from '@sulimantekalli/configlib'
-import configPaths from '../configPaths.js'
+import config from '../configPaths.js'
 
 export interface mySqlConfigIF {
   user: string
@@ -15,8 +15,14 @@ class MySQL {
   protected connection: Promise<mysql.Connection>
 
   constructor(config: Config) {
-    console.log(config)
-    this.connection = this.initConnection(config.getField('MYSQL_CONFIG'))
+    const mysqlConfig = {
+      user: config.getField('MYSQL_CONFIG_USER'),
+      password: config.getField('MYSQL_CONFIG_PASSWORD'),
+      database: config.getField('MYSQL_CONFIG_DATABASE'),
+      timezone: config.getField("MYSQL_CONFIG_TIMEZONE"),
+      multipleStatements: true
+    }
+    this.connection = this.initConnection(mysqlConfig)
   }
 
   async initConnection(config: mySqlConfigIF): Promise<mysql.Connection> {
@@ -30,7 +36,6 @@ class MySQL {
 
 }
 
-const config = new Config(configPaths)
 const db = new MySQL(config)
 
 export default db
