@@ -3,6 +3,10 @@ import { prepareStringForMySQL } from "./utils.js";
 import Request from "../Request.js";
 import RequestRequired from "../request-required-wrapper/RequestRequired.js";
 import { BiographyItemMYSQL } from 'suli-violin-website-types/src'
+import Logger from "../Logger.js";
+import config from "../configPaths.js";
+
+const logger = new Logger(config)
 
 class BioModel extends RequestRequired{
 
@@ -102,6 +106,7 @@ class BioModel extends RequestRequired{
 
   async create(request: Request): Promise<Request> {
     const data = request.getData()
+    logger.log('>>>>>>>>>>>>>>>>>>>>\n\n' + JSON.stringify(data, null, 2))
     const q = `INSERT INTO bio (name, components) VALUES ('${prepareStringForMySQL(data.name)}', '${prepareStringForMySQL(data.components)}');`
     const result = await this.db.query(q)
     request.setData(result[0])
