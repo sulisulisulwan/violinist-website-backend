@@ -1,4 +1,4 @@
-import Request from "../Request.js"
+import Request from "../request/Request.js"
 
 
 class RequestRequired {

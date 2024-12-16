@@ -1,5 +1,5 @@
-import Logger from "../Logger.js"
-import Request from "../Request.js"
+import Logger from "../logger/Logger.js"
+import Request from "../request/Request.js"
 import config from "../configPaths.js"
 
 const generateRequest = (req: any, res: any, next: any) => {

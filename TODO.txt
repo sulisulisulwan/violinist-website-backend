@@ -3,3 +3,13 @@
 -insert into photos all video photo files with (src, alt, type) (src, from caption, 'video-thumbnail')
 -rename thumbnail to thumbnail_id
 -update all thumbnail_ids to corresponding photo id
+
+
+TODO:
+
+
+***this will allow us to set up a CI/CD github action that can reclone the whole project without us losing data
+- need to build fresh config
+
+ADDITIONAL WORK
+  - Frontend needs to handle Email Handler error which sends back 'recipient not found'. log error to verify error message

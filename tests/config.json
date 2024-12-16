@@ -1,0 +1,17 @@
+{
+  "MYSQL_CONFIG_USER": "root",
+  "MYSQL_CONFIG_PASSWORD": "Mis4mancy!",
+  "MYSQL_CONFIG_DATABASE": "violinistWebsite",
+  "MYSQL_CONFIG_TIMEZONE": "Z",
+  "UPLOAD_TEMP_DIRECTORY": "/Users/sulimantekalli/Desktop/violinist-website/backend/temp/",
+  "S3_BUCKET": "suliman-tekalli-backend-assets",
+  "STORAGE_AUDIO_FILES": "/Users/sulimantekalli/Desktop/violinist-website/backend/storage/audio/",
+  "STORAGE_PHOTO_FILES": "/Users/sulimantekalli/Desktop/violinist-website/backend/storage/photos/",
+  "LOGGER_FILE_PATH": "/Users/sulimantekalli/Desktop/violinist-website/backend/tests/logger/logs/",
+  "LOGGER_LOG_TO_CONSOLE": true,
+  "LOGGER_LOG_TO_TEXT_FILE": true,
+  "EMAIL_FROM_ADDRESS": "hoopla@boobla.com",
+  "EMAIL_TO_ADDRESS": "anotherfakeaddress@fakeemailaccount.cx",
+  "S3_ACCESS_KEY": "",
+  "S3_SECRET_KEY": ""
+}

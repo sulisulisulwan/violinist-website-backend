@@ -10,7 +10,7 @@
     "allowJs": true,
     "moduleResolution": "node",
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "src/routes/bio/longForm", "src/routes/bio/shortForm"],
   "exclude": [
     "**/node_modules/**",
     "node_modules",

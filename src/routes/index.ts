@@ -1,15 +1,15 @@
 import * as express from 'express'
 
-import Bio from './bio/bio.js'
-import Blog from './blog/blog.js'
-import Calendar from './calendar/calendar.js'
-import Contact from './contact/contact.js'
-import CmsAssets from './cms-assets/cms-assets.js'
-import CmsAuth from './cms-auth/cms-auth.js'
-import Media from './media/media.js'
-import Photos from './photos/photos.js'
-import Audio from './audio/audio.js'
-import Video from './videos/videos.js'
+import Bio from './bio/index.js'
+import Blog from './blog/index.js'
+import Calendar from './calendar/index.js'
+import Contact from './contact/index.js'
+import CmsAssets from './cms-assets/index.js'
+import CmsAuth from './cms-auth/index.js'
+import Media from './media/index.js'
+import Photos from './photos/index.js'
+import Audio from './audio/index.js'
+import Video from './videos/index.js'
 
 const router = express.Router()
 

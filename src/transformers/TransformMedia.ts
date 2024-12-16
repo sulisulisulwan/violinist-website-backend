@@ -1,9 +1,18 @@
 import { AudioTrackDataAPI, AudioTrackDataMYSQL, PhotoDataAPI, PhotoDataMYSQL, PlaylistItemAPI, PlaylistTrackMYSQL, VideoDataAPI, VideoDataMYSQL } from "suli-violin-website-types/src"
+import { MasterModel } from "../models"
+import Request from "../request/Request"
 
 class TransformMedia {
 
 
-  public async transformGet(photoResults: any, videoResults: any, audioResults: any, playlistResults: any, request: any, audioModel: any) {
+  public async transformGet(
+    photoResults: any, 
+    videoResults: any, 
+    audioResults: any, 
+    playlistResults: any, 
+    request: Request, 
+    masterModel: MasterModel
+  ) {
 
     const photoIds: PhotoDataAPI[] = photoResults[0].map((photoData: PhotoDataMYSQL) => ({ id: photoData.id, photoCred: photoData.photoCred, originalFileName: photoData.originalFileName}))
     const videoUrls: VideoDataAPI[] = videoResults[0].map((videoData: VideoDataMYSQL) => ({ id: videoData.id, youtubeCode: videoData.youtubeCode, caption: videoData.caption }))
@@ -14,7 +23,7 @@ class TransformMedia {
     for (let i = 0; i < playlistResults.length; i++) {
       const playlistData = playlistResults[i]
       request.setData({ playlistId: playlistData.id })
-      const playlistTracks: PlaylistTrackMYSQL[] = (await audioModel.getAllPlaylistTracksByPlaylistId(request)).getData()
+      const playlistTracks: PlaylistTrackMYSQL[] = (await masterModel.audio.getAllPlaylistTracksByPlaylistId(request)).getData()
       const transformedPlaylists = playlistTracks.map((track: PlaylistTrackMYSQL) => {
         const audioTrack = audioData.find((audioTrack: AudioTrackDataAPI) => audioTrack.id === track.audioTrackId)
         return {

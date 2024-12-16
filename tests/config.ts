@@ -3,8 +3,8 @@ import * as url from 'url'
 import Config from '@sulimantekalli/configlib'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
-const pathToEnv = path.resolve(__dirname, '../env/.env')
-const pathToConfigDir = path.resolve(__dirname, '../config/')
+const pathToEnv = path.resolve(__dirname, './.env')
+const pathToConfigDir = path.resolve(__dirname)
 const configPaths = {
   pathToEnv,
   pathToConfigDir
