@@ -18,6 +18,13 @@ import Request from '../request/Request'
 import fs from 'fs/promises'
 import config from '../configPaths.js'
 
+type s3ClientConfigType = {
+  region?: string
+  credentials: {
+    accessKeyId: string
+    secretAccessKey: string
+  }
+}
 
 export class S3Handler {
   
@@ -26,12 +33,16 @@ export class S3Handler {
 
   constructor(config: Config) {
     this.config = config
-    this.S3 = new S3Client({
+    const s3ClientConfig: s3ClientConfigType = {
       credentials: {
         accessKeyId: this.config.getField('S3_ACCESS_KEY'),
         secretAccessKey: this.config.getField('S3_SECRET_KEY')
       }
-    })
+    }
+    if (this.config.getField('S3_REGION')) {
+      s3ClientConfig.region = this.config.getField('S3_REGION')
+    }
+    this.S3 = new S3Client(s3ClientConfig)
   }
 
   protected async sendCommand(

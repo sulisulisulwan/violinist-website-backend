@@ -55,5 +55,8 @@ for (let i = 0; i < allAudio.length; i++) {
 
 console.log(allFiles)
 
-// console.log(s3HandlerSingleton.uploadFile())
+for (let i = 0; i < allFiles.length; i++) {
+  await s3HandlerSingleton.uploadFile(allFiles[i])
+}
+
 
