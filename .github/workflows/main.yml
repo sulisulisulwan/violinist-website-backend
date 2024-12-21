@@ -26,15 +26,15 @@ jobs:
         export NVM_DIR=~/.nvm
         source ~/.nvm/nvm.sh
         nvm install 18; \
+        cd violinist-website-backend; \
+        npm run stop; \
+        cd ..; \
+        rm -r -f violinist-website-backend; \
+        git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
+        cp config.json ./violinist-website-backend/config/config.json; \
+        cd violinist-website-backend; \
+        npm i; \
+        npm run build; \
+        npm run start-pm2; \
         "
-      # cd violinist-website-backend; \
-      # npm run stop; \
-      # cd ..; \
-      # rm -r -f violinist-website-backend; \
-      # git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
-      # cp config.json ./violinist-website-backend/config/config.json; \
-      # cd violinist-website-backend; \
-      # npm i; \
-      # npm run build; \
-      # npm run start-pm2; \
       
