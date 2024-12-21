@@ -1,0 +1,33 @@
+name: Node.js CI/CD on AWS ubuntu
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: actions/checkout@v4
+    - name: Deploy to AWS EC2
+      env: 
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      run: |
+        echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} "\
+        ls; \
+        cd violinist-website-backend; \
+        npm run stop; \
+        cd ..; \
+        rm -r -f violinist-website-backend; \
+        git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
+        cp config.json ./violinist-website-backend/config/config.json; \
+        cd violinist-website-backend; \
+        npm i; \
+        npm run build; \
+        npm run start-pm2; \
+        "
