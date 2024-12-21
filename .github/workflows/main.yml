@@ -19,15 +19,18 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} "\
-        ls; \
-        cd violinist-website-backend; \
-        npm run stop; \
-        cd ..; \
-        rm -r -f violinist-website-backend; \
-        git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
-        cp config.json ./violinist-website-backend/config/config.json; \
-        cd violinist-website-backend; \
-        npm i; \
-        npm run build; \
-        npm run start-pm2; \
+        echo ; \
+        node_ver=`node -v`
+        echo $node_ver
         "
+      # cd violinist-website-backend; \
+      # npm run stop; \
+      # cd ..; \
+      # rm -r -f violinist-website-backend; \
+      # git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
+      # cp config.json ./violinist-website-backend/config/config.json; \
+      # cd violinist-website-backend; \
+      # npm i; \
+      # npm run build; \
+      # npm run start-pm2; \
+      
