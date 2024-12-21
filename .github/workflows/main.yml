@@ -22,9 +22,9 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} "\
-        echo ; \
-        node_ver=`sudo node -v`
-        echo node version is: $node_ver
+        node_ver=`sudo node -v`; \
+        echo node version is: $node_ver; \
+        ls
         "
       # cd violinist-website-backend; \
       # npm run stop; \
