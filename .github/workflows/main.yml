@@ -22,21 +22,11 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} "\
-
-        if ! command -v nvm &> /dev/null; then
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          source ~/.bashrc
-        fi
-
-        nvm use 18; \
-        echo "Installing PM2..."
-
-        if ! command -v pm2 &> /dev/null; then
-          npm install -g pm2
-        fi
-
+        
+        export NVM_DIR=~/.nvm
+        source ~/.nvm/nvm.sh
+        nvm install 18; \
+        npm install -g pm2
         cd violinist-website-backend; \
         npm run stop; \
         cd ..; \
