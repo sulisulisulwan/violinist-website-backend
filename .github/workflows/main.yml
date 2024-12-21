@@ -21,7 +21,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${REMOTE_USER}@${REMOTE_HOST} "\
         echo ; \
         node_ver=`node -v`
-        echo $node_ver
+        echo node version is: $node_ver
         "
       # cd violinist-website-backend; \
       # npm run stop; \
