@@ -12,7 +12,7 @@ class PhotosModel extends RequestRequired {
   }
 
   async getAllPhotoIds(request: Request): Promise<Request> {
-    const q = 'SELECT id, originalFileName, photoCred, alt FROM photos;'
+    const q = 'SELECT id, originalFileName, photoCred, alt, type FROM photos;'
     const results = await this.db.query(q)
     request.setData(results)
     return request
@@ -30,7 +30,7 @@ class PhotosModel extends RequestRequired {
   async getPhotosRecordsByType(request: Request): Promise<Request> {
     const data = request.getData()
     const type = data.type
-    const q = `SELECT id, originalFileName, photoCred, alt FROM photos WHERE type = '${type}';`
+    const q = `SELECT id, originalFileName, photoCred, alt, type FROM photos WHERE type = '${type}';`
     const results = await this.db.query(q)
     request.setData(results)
     return request

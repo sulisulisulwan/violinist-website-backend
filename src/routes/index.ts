@@ -8,6 +8,7 @@ import CmsAssets from './cms-assets/index.js'
 import CmsAuth from './cms-auth/index.js'
 import Media from './media/index.js'
 import Photos from './photos/index.js'
+import Programs from './programs/index.js'
 import Audio from './audio/index.js'
 import Video from './videos/index.js'
 
@@ -22,6 +23,7 @@ router.use('/cms-auth', CmsAuth)
 router.use('/cms-assets', CmsAssets)
 router.use('/media', Media)
 router.use('/photos', Photos)
+router.use('/programs', Programs)
 router.use('/videos', Video)
 
 /* 

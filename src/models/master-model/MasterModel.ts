@@ -7,6 +7,11 @@ import CmsAuthModel from "../submodels/cms-auth.js";
 import PhotosModel from "../submodels/photos.js";
 import VideosModel from "../submodels/videos.js";
 import db, { DB } from "../../db/db.js";
+
+import tempDb from "./tempDb.js";
+import ProgramsModel from "../submodels/programs.js";
+import MySQL from "../../db/MySQL.js";
+
 export default class MasterModel {
 
   protected models: Record<string, any>
@@ -19,6 +24,7 @@ export default class MasterModel {
       calendar: new CalendarModel(db),
       cmsAuth: new CmsAuthModel(db),
       photos: new PhotosModel(db),
+      programs: new ProgramsModel(tempDb as unknown as MySQL),
       videos: new VideosModel(db)
     }
   }
@@ -43,6 +49,11 @@ export default class MasterModel {
     return this.models.cmsAuth
  
   }
+
+  get programs (): ProgramsModel {
+    return this.models.programs
+  }
+
   get photos (): PhotosModel {
     return this.models.photos
   }
