@@ -20,7 +20,8 @@ const config = new Config(configPaths, [
   "STORAGE_PHOTO_FILES",
   "LOGGER_FILE_PATH",
   "LOGGER_LOG_TO_CONSOLE",
-  "LOGGER_LOG_TO_TEXT_FILE"
+  "LOGGER_LOG_TO_TEXT_FILE",
+  "IS_DEV"
 ])
 
 export default config

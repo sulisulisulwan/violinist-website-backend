@@ -1,4 +1,4 @@
-import { S3Handler } from "../../../middleware/S3Handler.js"
+import { S3Handler } from "../../../middleware/s3/S3Handler.js"
 import { MasterModel } from "../../../models/index.js"
 import BaseRoute from "../../BaseRoute.js"
 import { Request as ExpressRequest, Response as ExpressResponse } from "express-serve-static-core";

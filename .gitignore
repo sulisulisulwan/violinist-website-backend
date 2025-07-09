@@ -15,3 +15,4 @@ config/config.json
 logs/*
 storage/audio
 !logs/.gitkeep
+_s3files

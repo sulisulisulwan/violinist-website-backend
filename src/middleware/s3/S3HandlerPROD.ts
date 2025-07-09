@@ -8,15 +8,13 @@ import {
   $Command,
   ServiceInputTypes,
   S3ClientResolvedConfigType,
-  PutObjectOutput,
-  ListObjectsOutput,
-  DeleteObjectOutput,
-  GetObjectOutput,
 } from '@aws-sdk/client-s3'
 import Config from '@sulimantekalli/configlib'
-import Request from '../request/Request'
+import Request from '../../request/Request.js'
 import fs from 'fs/promises'
-import config from '../configPaths.js'
+import config from '../../configPaths.js'
+import S3HandlerResponse from './S3HandlerResponse.js'
+import S3HandlerAbstract from './S3HandlerAbstract.js'
 
 type s3ClientConfigType = {
   region?: string
@@ -26,7 +24,7 @@ type s3ClientConfigType = {
   }
 }
 
-export class S3Handler {
+export class S3HandlerPROD implements S3HandlerAbstract {
   
   readonly config: Config
   protected S3: S3Client
@@ -45,26 +43,7 @@ export class S3Handler {
     this.S3 = new S3Client(s3ClientConfig)
   }
 
-  protected async sendCommand(
-    command: 
-      $Command<
-        ServiceInputTypes, 
-        ServiceOutputTypes, 
-        S3ClientResolvedConfigType
-      >
-  ): Promise<S3HandlerResponse> {
-    const handlerResponse = new S3HandlerResponse()
-    try {
-      const s3Response = await this.S3.send(command)
-      handlerResponse.setData(s3Response) 
-    } catch(e) {
-      console.log(e)
-      handlerResponse.setIsError(e.cause)
-    }
-    return handlerResponse
-  }
-
-  async getFile(request: Request) {
+  public async getFile(request: Request) {
 
     const { s3Directory, s3Filename } = request.getData()
     let keyExists = false
@@ -88,7 +67,7 @@ export class S3Handler {
     return new S3HandlerResponse().setIsError(`Key '${key}' does not exist!`)
   }
 
-  async uploadFile(request: Request) {
+  public async uploadFile(request: Request) {
 
     const { s3Directory, s3Filename } = request.getData()
     const key = s3Directory + '/' + s3Filename
@@ -101,7 +80,7 @@ export class S3Handler {
     return await this.sendCommand(command)
   }
 
-  async deleteFile(request: Request) {
+  public async deleteFile(request: Request) {
     const { s3Directory, s3Filename } = request.getData()
     const key = s3Directory + '/' + s3Filename
     let keyExists = false
@@ -124,6 +103,25 @@ export class S3Handler {
     return new S3HandlerResponse().setIsError(`Key '${key}' does not exist!`)
   }
 
+  protected async sendCommand(
+    command: 
+      $Command<
+        ServiceInputTypes, 
+        ServiceOutputTypes, 
+        S3ClientResolvedConfigType
+      >
+  ): Promise<S3HandlerResponse> {
+    const handlerResponse = new S3HandlerResponse()
+    try {
+      const s3Response = await this.S3.send(command)
+      handlerResponse.setData(s3Response) 
+    } catch(e) {
+      console.log(e)
+      handlerResponse.setIsError(e.cause)
+    }
+    return handlerResponse
+  }
+
   protected async checkIfExistsInBucket(key: string): Promise<boolean> {
     const command = new ListObjectsCommand({
       Bucket: this.config.getField('S3_BUCKET'),
@@ -141,47 +139,3 @@ export class S3Handler {
 
 
 }
-
-class S3HandlerResponse {
-
-  protected error: {
-    isError: boolean
-    message: string
-  }
-  protected data: PutObjectOutput | ListObjectsOutput | DeleteObjectOutput | GetObjectOutput | null
-
-  constructor() {
-    this.error = {
-      isError: false,
-      message: ''
-    }
-    this.data = null
-  }
-
-  setData(data: ServiceOutputTypes): void {
-    this.data = data as PutObjectOutput | ListObjectsOutput | DeleteObjectOutput | GetObjectOutput | null
-  }
-
-  getData(): any {
-    return this.data
-  }
-
-  setIsError(msg: string): this {
-    this.error.isError = true
-    this.error.message = msg
-    return this
-  }
-
-  errorOccurred(): boolean {
-    return this.error.isError
-  }
-
-  throw(): void {
-    throw new Error(this.error.message)
-  }
-
-
-}
-const s3HandlerSingleton = new S3Handler(config)
-
-export { s3HandlerSingleton, S3HandlerResponse }

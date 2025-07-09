@@ -112,7 +112,7 @@ CREATE TABLE users (
   salt VARCHAR(64),
   passwordHash VARCHAR(64),
   PRIMARY KEY (id)
-)
+);
 
 INSERT INTO bio (name, components) VALUES (
   'website',

@@ -45,6 +45,25 @@ class PhotosModel extends RequestRequired {
     return request
   }
 
+  async getPhotosByTag(request: Request): Promise<Request> {
+    const data = request.getData()
+    const tag = data.tag
+    const q1 = `SELECT id FROM tags WHERE tagname = '${tag}';`
+    const results1 = await this.db.query(q1) as any
+    // const q2 = `SELECT photo_asset_id FROM tag_mapping WHERE tagname = '${tag}';`
+    if (!results1[0].length) {
+      request.setData(null)
+      return request
+    } 
+
+    const tagId = results1[0][0].id
+    const q2 = `SELECT * from tag_mapping WHERE tag_id = ${tagId};`
+    const results2 = await this.db.query(q2) as any
+    const mediaAssetsWithTag = results2[0]
+    request.setData(mediaAssetsWithTag)
+    return request
+  }
+
   async createPhoto(request: Request): Promise<Request> {
     const data = request.getData()
     const q = `
@@ -85,6 +104,7 @@ class PhotosModel extends RequestRequired {
     request.setData(result)
     return request
   }
+
   
 }
 

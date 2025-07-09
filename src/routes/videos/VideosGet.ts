@@ -1,5 +1,4 @@
 import { VideoDataAPI, VideoDataMYSQL } from "suli-violin-website-types/src";
-import { S3Handler } from "../../middleware/S3Handler.js"
 import UploadTempHandler from "../../middleware/UploadTempHandler.js"
 import { MasterModel } from "../../models/index.js"
 import BaseRoute from "../BaseRoute.js"
@@ -20,7 +19,15 @@ class GetVideos extends BaseRoute {
     const request = (req as any).requestObj as Request
     try {
       const videoResults = (await this.model.videos.getAllVideos(request)).getData()
-      const videoUrls: VideoDataAPI[] = videoResults[0].map((videoData: VideoDataMYSQL) => ({ id: videoData.id, youtubeCode: videoData.youtubeCode, caption: videoData.caption }))
+      const videoUrls: VideoDataAPI[] = videoResults[0]
+        .map((videoData: VideoDataMYSQL) => (
+          { 
+            id: videoData.id, 
+            youtubeCode: videoData.youtubeCode, 
+            caption: videoData.caption,
+            thumbnail_id: videoData.thumbnail_id
+          }
+        ))
       const resData = { results: videoUrls }
       res.status(200).json(resData)
     } catch(e) {

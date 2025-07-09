@@ -1,5 +1,5 @@
 import express from 'express'
-import { s3HandlerSingleton } from "../../middleware/S3Handler.js";
+import { s3HandlerSingleton } from "../../middleware/s3/S3Handler.js";
 import generateRequest from "../generateRequest.js";
 import GetAudio from "./AudioGet.js";
 import PostAudio from "./AudioPost.js";

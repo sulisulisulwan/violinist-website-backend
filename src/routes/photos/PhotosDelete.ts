@@ -1,4 +1,4 @@
-import { S3Handler } from "../../middleware/S3Handler.js";
+import { S3Handler } from "../../middleware/s3/S3Handler.js";
 import BaseRoute from "../BaseRoute.js";
 import { MasterModel } from "../../models/index.js";
 import UploadTempHandler from "../../middleware/UploadTempHandler.js";

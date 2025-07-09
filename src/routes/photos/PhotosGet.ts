@@ -1,4 +1,5 @@
-import { S3Handler, S3HandlerResponse } from "../../middleware/S3Handler.js";
+import { S3Handler } from "../../middleware/s3/S3Handler.js";
+import S3HandlerResponse from "../../middleware/s3/S3HandlerResponse.js";
 import BaseRoute from "../BaseRoute.js";
 import { MasterModel } from "../../models/index.js";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express-serve-static-core";
@@ -16,10 +17,15 @@ export default class GetPhotos extends BaseRoute {
   
   async exec(req: ExpressRequest, res: ExpressResponse) {
     const request = (req as any).requestObj as Request
-    const { id, isCropped, type } = req.query
-    request.setData({ id, isCropped, type })
+    const { id, isCropped, type, tag } = req.query
+    request.setData({ id, isCropped, type, tag })
 
     try {
+
+      if (tag) {
+        return await this.getPhotosByTag(request, res)
+      }
+
       if (id === undefined) {
         return type ? this.getPhotosByType(request, res) : this.handleNoIdeaNoType(request, res) 
       }
@@ -36,9 +42,7 @@ export default class GetPhotos extends BaseRoute {
       })
 
       const handlerResponse = await this.s3Handler.getFile(request)
-    
       this.sendImage(res, handlerResponse)
-
 
     } catch(e) {
       (req as any).logger.log(e.stack)
@@ -54,6 +58,12 @@ export default class GetPhotos extends BaseRoute {
   async getPhotosByType(request: Request, res: ExpressResponse) {
     const photos = (await (this.model.photos.getPhotosRecordsByType(request))).getData()
     res.status(200).json(photos[0])
+  }
+
+  async getPhotosByTag(request: Request, res: ExpressResponse) {
+    const photos = (await (this.model.photos.getPhotosByTag(request))).getData()
+    console.log()
+    res.status(200).json(photos)
   }
 
   async sendImage(res: ExpressResponse, handlerResponse: S3HandlerResponse) {

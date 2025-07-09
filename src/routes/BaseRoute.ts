@@ -1,4 +1,6 @@
-import { S3Handler, S3HandlerResponse } from "../middleware/S3Handler.js";
+import { S3Handler } from "../middleware/s3/S3Handler.js";
+import S3HandlerResponse from "../middleware/s3/S3HandlerResponse.js"
+
 import Request from "../request/Request.js";
 
 interface iCrudActions  {
