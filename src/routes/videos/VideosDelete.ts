@@ -28,7 +28,7 @@ class DeleteVideos extends BaseRoute {
 
       request.setData({
         s3Filename: thumbnail,
-        s3Directory: 'video-thumbnail'
+        s3Directory: 'photos'
       })
 
       const handlerResponse = await this.s3Handler.deleteFile(request)

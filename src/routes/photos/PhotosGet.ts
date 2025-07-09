@@ -38,7 +38,7 @@ export default class GetPhotos extends BaseRoute {
 
       request.setData({
         s3Filename: isCropped ? croppedSrc : src,
-        s3Directory: 'media-photo'
+        s3Directory: 'photos'
       })
 
       const handlerResponse = await this.s3Handler.getFile(request)

@@ -53,7 +53,7 @@ class PostVideos extends BaseRoute {
        */
       request.setData({
         s3Filename: `${filename}`,
-        s3Directory: 'video-thumbnail'
+        s3Directory: 'photos'
       })
       await this.s3Handler.uploadFile(request)
       
