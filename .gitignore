@@ -16,3 +16,4 @@ logs/*
 storage/audio
 !logs/.gitkeep
 _s3files
+yarn.lock

@@ -27,6 +27,7 @@ jobs:
         source ~/.nvm/nvm.sh
         nvm install 18; \
         npm install -g pm2
+        npm install -g yarn
         cd violinist-website-backend; \
         npm run stop; \
         cd ..; \
@@ -34,7 +35,7 @@ jobs:
         git clone https://github.com/sulisulisulwan/violinist-website-backend.git; \
         cp config.json ./violinist-website-backend/config/config.json; \
         cd violinist-website-backend; \
-        npm i; \
+        yarn; \
         npm run build; \
         npm run start-pm2; \
         "
