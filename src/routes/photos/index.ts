@@ -19,7 +19,7 @@ const patchPhotos = new PatchPhotos(masterModelSingleton)
 
 photosRoute
   .get('/', generateRequest, async (req, res) => await getPhotos.exec(req, res))
-  .post('/', generateRequest, photosUploadTemp.single('photo'), async (req, res) => await postPhotos.exec(req, res))
+  .post('/', generateRequest, photosUploadTemp.single('photo') as any, async (req, res) => await postPhotos.exec(req, res))
   .patch('/', generateRequest, async (req, res) => await patchPhotos.exec(req, res))
   .delete('/', generateRequest, async (req, res) => await deletePhotos.exec(req, res))
 

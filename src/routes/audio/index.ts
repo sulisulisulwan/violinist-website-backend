@@ -37,7 +37,7 @@ const deleteTracks = new DeleteTracks(masterModelSingleton)
 
 audioRoute
   .get('/', generateRequest, async (req, res) => await getAudio.exec(req, res))
-  .post('/', generateRequest, audioUploadTemp.single('audio-track'), async (req, res) => await postAudio.exec(req, res))
+  .post('/', generateRequest, audioUploadTemp.single('audio-track') as any, async (req, res) => await postAudio.exec(req, res))
   .patch('/', generateRequest, async (req, res) => await patchAudio.exec(req, res))
   .delete('/', generateRequest, async (req, res) => await deleteAudio.exec(req, res))
   

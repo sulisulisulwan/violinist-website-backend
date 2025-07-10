@@ -21,8 +21,8 @@ const getVideosValidateYoutubeCode = new GetVideosValidateYoutubeCode(masterMode
 
 videosRoute
   .get('/', generateRequest, async (req, res) => await getVideos.exec(req, res))
-  .post('/', generateRequest, videosUploadTemp.single('video-thumbnail'), async (req, res) => await postVideos.exec(req, res))
-  .patch('/', generateRequest, videosUploadTemp.single('video-thumbnail'), async (req, res) => await patchVideos.exec(req, res))
+  .post('/', generateRequest, videosUploadTemp.single('video-thumbnail') as any, async (req, res) => await postVideos.exec(req, res))
+  .patch('/', generateRequest, videosUploadTemp.single('video-thumbnail') as any, async (req, res) => await patchVideos.exec(req, res))
   .delete('/', generateRequest, async (req, res) => await deleteVideos.exec(req, res))
   .get('/validateYoutubeCode', generateRequest, async (req, res) => await getVideosValidateYoutubeCode.exec(req, res))
 
