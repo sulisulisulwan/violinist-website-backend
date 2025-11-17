@@ -1,0 +1,20 @@
+{
+  "PORT": 1337,
+  "MYSQL_CONFIG_USER": "user",
+  "MYSQL_CONFIG_PASSWORD": "password",
+  "MYSQL_CONFIG_DATABASE": "database",
+  "MYSQL_CONFIG_TIMEZONE": "Z",
+  "UPLOAD_TEMP_DIRECTORY": "/path/to/the/temp/",
+  "S3_BUCKET": "suliman-tekalli-backend-assets-test",
+  "STORAGE_AUDIO_FILES": "/path/to/the/storage/audio/",
+  "STORAGE_PHOTO_FILES": "/path/to/the/storage/photos/",
+  "LOGGER_FILE_PATH": "/path/to/the/logs/",
+  "LOGGER_LOG_TO_CONSOLE": true,
+  "LOGGER_LOG_TO_TEXT_FILE": true,
+  "EMAIL_FROM_ADDRESS": "hoopla@boobla.com",
+  "EMAIL_TO_ADDRESS": "calamaboop@gmail.com",
+  "S3_ACCESS_KEY": "",
+  "S3_SECRET_KEY": "",
+  "S3_REGION": "",
+  "IS_DEV": true
+}
