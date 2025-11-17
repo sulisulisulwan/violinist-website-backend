@@ -1,0 +1,7 @@
+{
+  "MYSQL_PASSWORD": "",
+  "MYSQL_DB": "",
+  "MYSQL_USER": "",
+  "SSH_KEY_PATH": "",
+  "EC2_NAME": ""
+}

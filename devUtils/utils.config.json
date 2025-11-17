@@ -1,0 +1,7 @@
+{
+  "MYSQL_PASSWORD": "Mis4mancy!",
+  "MYSQL_DB": "violinistWebsite",
+  "MYSQL_USER": "root",
+  "SSH_KEY_PATH": "../../myKey.pem",
+  "EC2_NAME": "ubuntu@ec2-3-131-183-222.us-east-2.compute.amazonaws.com"
+}

@@ -106,6 +106,14 @@ CREATE TABLE playlistTracks (
     ON DELETE CASCADE 
 );
 
+CREATE TABLE shortFormBio (
+  id INT AUTO_INCREMENT NOT NULL,
+  bioId INT,
+  PRIMARY KEY (id)
+);
+
+INSERT INTO shortFormBio (bioId) VALUES (NULL);
+
 CREATE TABLE users (
   id INT AUTO_INCREMENT NOT NULL,
   username VARCHAR(50),
@@ -216,18 +224,3 @@ INSERT INTO events (
   'https://www.lotteconcerthall.com/eng/Performance/ConcertDetails/259892',
   2
 );
-
-INSERT INTO photos (fileName) VALUES ('st_violin_1.jpg');
-INSERT INTO photos (fileName) VALUES ('st_violin_2.jpg');
-INSERT INTO photos (fileName) VALUES ('st_violin_3.jpg');
-INSERT INTO photos (fileName) VALUES ('st_violin_4.jpg');
-INSERT INTO photos (fileName) VALUES ('st_violin_5.jpg');
-INSERT INTO photos (fileName) VALUES ('st_violin_6.jpg');
-
-INSERT INTO videos (url) VALUES ('youtubelink1');
-INSERT INTO videos (url) VALUES ('youtubelink2');
-INSERT INTO videos (url) VALUES ('youtubelink3');
-INSERT INTO videos (url) VALUES ('youtubelink4');
-INSERT INTO videos (url) VALUES ('youtubelink5');
-INSERT INTO videos (url) VALUES ('youtubelink6');
-INSERT INTO videos (url) VALUES ('youtubelink7');
